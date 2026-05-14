@@ -1,0 +1,81 @@
+<div class="editor-container">
+  <div class="editor-content">
+
+    <aside class="profile-sidebar">
+      <div class="profile-card">
+        <div class="avatar-circle">
+          <i class="fa-solid fa-user"></i>
+        </div>
+
+        <span class="welcome-text">Bienvenido,</span>
+        <h2 class="user-name">{{ usuario.nombre }}</h2>
+
+        <span class="role-badge">{{ usuario.rol }}</span>
+
+        <button class="btn-logout" (click)="cerrarSesion()">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar Sesión
+        </button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+
+      <div class="modules-grid" *ngIf="vistaActual === 'menu'">
+        <div class="module-card">
+          <div class="module-icon">
+            <i class="fa-solid fa-pen-to-square"></i>
+          </div>
+          <h3>Crear Publicación</h3>
+          <p>Redacta y publica nuevas noticias o artículos para la revista digital.</p>
+          <button class="btn-module" (click)="cambiarVista('crear')">Entrar al Módulo <i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+
+        <div class="module-card">
+          <div class="module-icon">
+            <i class="fa-regular fa-comments"></i>
+          </div>
+          <h3>Comentar Publicación</h3>
+          <p>Revisa las noticias publicadas y añade tus comentarios u opiniones.</p>
+          <button class="btn-module" (click)="cambiarVista('comentar')">Entrar al Módulo <i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+      </div>
+
+      <div class="action-section" *ngIf="vistaActual === 'crear'">
+        <button class="btn-volver" (click)="cambiarVista('menu')">
+          <i class="fa-solid fa-arrow-left"></i> Volver al panel
+        </button>
+
+        <h2>Crear Nueva Publicación</h2>
+        <form class="editor-form">
+          <input type="text" placeholder="Título de la noticia" required>
+
+          <select required>
+            <option value="" disabled selected>Selecciona una categoría...</option>
+            <option value="noticias">Noticia</option>
+            <option value="horoscopo">Horóscopo</option>
+          </select>
+
+          <div class="file-upload-wrapper">
+            <label for="imagen-portada">Sube la imagen de portada</label>
+            <input type="file" id="imagen-portada" accept="image/*" required>
+          </div>
+
+          <textarea placeholder="Escribe el contenido del artículo aquí..." required></textarea>
+
+          <button type="submit" class="btn-module">Publicar Artículo</button>
+        </form>
+      </div>
+
+      <div class="action-section" *ngIf="vistaActual === 'comentar'">
+        <button class="btn-volver" (click)="cambiarVista('menu')">
+          <i class="fa-solid fa-arrow-left"></i> Volver al panel
+        </button>
+
+        <h2>Comentar Publicaciones</h2>
+        <p>Aquí se listarán las noticias disponibles para comentar.</p>
+      </div>
+
+    </main>
+
+  </div>
+</div>

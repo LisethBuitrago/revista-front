@@ -37,9 +37,9 @@ export class Usuario implements OnInit {
   ngOnInit(): void {
     this.tarjetasFiltradas = this.tarjetas;
   }
-  filtrarPorCategoria(event: any) {
-    const categoriaSeleccionada = event.target.value.toUpperCase();
-
+  filtrarPorCategoria(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    const categoriaSeleccionada = selectElement.value.toUpperCase();
     if (categoriaSeleccionada === 'TODAS') {
       this.tarjetasFiltradas = this.tarjetas;
     } else {

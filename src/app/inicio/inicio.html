@@ -1,1 +1,19 @@
-<p>inicio works!</p>
+<div class="inicio-container">
+  <div class="cards-grid">
+    <div class="card" *ngFor="let item of tarjetas">
+
+      <div class="card-image">
+        <img [src]="item.imagen" [alt]="item.titulo">
+      </div>
+
+      <div class="card-content">
+        <span class="card-tag">{{ item.tipo }}</span>
+
+        <h3 class="card-title">{{ item.titulo }}</h3>
+
+        <p class="card-description">Explora los detalles más importantes en nuestra edición suscribete.</p>
+      </div>
+
+    </div>
+  </div>
+</div>

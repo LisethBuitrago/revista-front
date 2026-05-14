@@ -4,7 +4,22 @@ import { Component } from '@angular/core';
   selector: 'app-inicio',
   standalone: false,
   templateUrl: './inicio.html',
-  styleUrl: './inicio.css',
+  styleUrl: './inicio.css'
 })
 export class Inicio {
+  img1 = "https://ichef.bbci.co.uk/ace/ws/640/cpsprodpb/F403/production/_109476426_jheison3.png.webp";
+  img2="https://cloudfront-us-east-1.images.arcpublishing.com/infobae/UXETGRWJY5BS3MXAJLUPW2YBOQ.jpg";
+  img3="https://depor.com/resizer/v2/5UEDBTDAIVC67FUUJR474F7ITA.jpg?auth=3756e394f1de56526b8ab7abab8356273de8fc0e4bf7ed3ec12ec6677f8726f8&width=3000&height=3000&quality=75&smart=true";
+  img4="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxd1XZgbZXU0cXMPe8tAREQvsJjX6TrxZwXQ&s";
+  img5="https://hips.hearstapps.com/hmg-prod/images/micro-tendencias-invierno-2025-3-6782513627a47.jpg?resize=980:*"
+  img6="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVbNh29T2ReVo6Wpp4bRtTe2iqDMLvtJNnmA&s";
+
+  tarjetas = [
+    { titulo: 'Las estrellas dicen...', tipo: 'HORÓSCOPO', imagen: this.img1 },
+    { titulo: 'Gran estreno en cines', tipo: 'NOTICIA', imagen: this.img2 },
+    { titulo: 'Tu signo este mes', tipo: 'HORÓSCOPO', imagen: this.img3 },
+    { titulo: 'Tecnología hoy', tipo: 'NOTICIA', imagen: this.img4 },
+    { titulo: 'Moda de invierno', tipo: 'NOTICIA', imagen: this.img5 },
+    { titulo: 'Predicciones semanales', tipo: 'HORÓSCOPO', imagen: this.img6 }
+  ];
 }

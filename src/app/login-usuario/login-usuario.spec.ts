@@ -1,0 +1,22 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { LoginUsuario } from './login-usuario';
+
+describe('LoginUsuario', () => {
+  let component: LoginUsuario;
+  let fixture: ComponentFixture<LoginUsuario>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [LoginUsuario],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(LoginUsuario);
+    component = fixture.componentInstance;
+    await fixture.whenStable();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

@@ -5,17 +5,20 @@
       <a href="#" class="login-link">
         <i class="fa-solid fa-lock-open"></i> DESENCRIPTAR
       </a>
+      <a routerLink="/login-administrador" class="login-link">
+        <i class="fa-solid fa-user-gear"></i> ADMINISTRADOR
+      </a>
     </div>
 
     <div class="navbar-center">
-      <img [src]="logo" alt="Prisma Magazine Logo" class="logo-img">
+      <img [src]="logo" alt="Prisma Magazine Logo" class="logo-img" routerLink="/" style="cursor: pointer;">
     </div>
 
     <div class="navbar-right">
-      <a href="#" class="login-link">
+      <a routerLink="/login-usuario" class="login-link">
         <i class="fa-regular fa-user"></i> INICIAR SESIÓN
       </a>
-      <button class="subscribe-btn">
+      <button class="subscribe-btn" routerLink="/crear-cuenta-usuario">
         <i class="fa-regular fa-bell"></i> SUSCRÍBETE
       </button>
     </div>

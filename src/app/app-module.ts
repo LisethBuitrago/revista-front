@@ -5,10 +5,9 @@ import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
 import { Inicio } from './inicio/inicio';
 import { Navbar } from './navbar/navbar';
-import { Footer } from './footer/footer';
 
 @NgModule({
-  declarations: [App, Inicio, Navbar, Footer],
+  declarations: [App, Inicio, Navbar,],
   imports: [BrowserModule, AppRoutingModule],
   providers: [provideBrowserGlobalErrorListeners()],
   bootstrap: [App],

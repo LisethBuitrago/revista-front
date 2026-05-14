@@ -1,0 +1,116 @@
+
+.navbar-container {
+  background-color: #f4f3ef;
+  font-family: 'Niramit', sans-serif;
+  padding: 15px 40px;
+  border-bottom: 1px solid #d1d1d1;
+}
+
+.login-link {
+  text-decoration: none;
+  color: #333;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.navbar-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 15px;
+}
+
+.navbar-left, .navbar-center, .navbar-right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+.navbar-center { justify-content: center; }
+.navbar-right { justify-content: flex-end; gap: 25px; }
+
+.logo-img { height: 65px; }
+.subscribe-btn {
+  background-color: #000;
+  color: #fff;
+  border: none;
+  padding: 12px 24px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.2s ease;
+}
+
+.subscribe-btn:hover {
+  background-color: #333;
+  transform: scale(1.05);
+}
+
+
+.navbar-bottom {
+  display: flex;
+  justify-content: center;
+  padding-top: 15px;
+}
+
+.categories-nav {
+  display: flex;
+  gap: 50px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #000;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 1px;
+  transition: transform 0.3s ease, color 0.3s ease;
+  display: inline-block;
+}
+
+.nav-link:hover {
+  transform: scale(1.15);
+  color: #555;
+}
+.nav-check {
+  display: none;
+}
+
+.icon-rotate {
+  font-size: 16px;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.nav-check:checked + .nav-icon-label .icon-rotate {
+  transform: rotate(180deg);
+}
+
+.nav-icon-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.navbar-left {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.login-link:hover {
+  color: #666;
+}

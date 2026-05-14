@@ -1,0 +1,54 @@
+<div class="dashboard-container">
+  <div class="dashboard-content">
+
+    <aside class="profile-sidebar">
+      <div class="profile-card">
+        <div class="avatar-circle">
+          <i class="fa-solid fa-user"></i>
+        </div>
+
+        <span class="welcome-text">Bienvenido,</span>
+        <h2 class="user-name">{{ usuario.nombre }}</h2>
+
+        <span class="role-badge">{{ usuario.rol }}</span>
+
+        <button class="btn-logout" (click)="cerrarSesion()">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar Sesión
+        </button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+
+      <div class="filter-header">
+        <h2>Últimas Publicaciones</h2>
+        <div class="filter-box">
+          <i class="fa-solid fa-filter"></i>
+          <select>
+            <option value="todas" selected>Todas las categorías</option>
+            <option value="noticias">Noticias</option>
+            <option value="horoscopo">Horóscopo</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="cards-grid">
+        <div class="card" *ngFor="let item of tarjetas">
+          <div class="card-image">
+            <img [src]="item.imagen" [alt]="item.titulo">
+          </div>
+
+          <div class="card-content">
+            <span class="card-tag">{{ item.tipo }}</span>
+            <h3 class="card-title">{{ item.titulo }}</h3>
+            <p class="card-description">Explora los detalles más importantes en nuestra edición. Suscríbete para más.</p>
+
+            <button class="btn-leer">Leer artículo</button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+</div>

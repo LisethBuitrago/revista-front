@@ -9,9 +9,20 @@ import { LoginUsuario } from './login-usuario/login-usuario';
 import { CrearCuentaUsuario } from './crear-cuenta-usuario/crear-cuenta-usuario';
 import { FormsModule } from '@angular/forms';
 import { LoginAdministrador } from './login-administrador/login-administrador';
+import { Editor } from './editor/editor';
+import { Usuario } from './usuario/usuario';
 
 @NgModule({
-  declarations: [App, Inicio, Navbar, LoginUsuario, CrearCuentaUsuario, LoginAdministrador],
+  declarations: [
+    App,
+    Inicio,
+    Navbar,
+    LoginUsuario,
+    CrearCuentaUsuario,
+    LoginAdministrador,
+    Editor,
+    Usuario,
+  ],
   imports: [BrowserModule, AppRoutingModule, FormsModule],
   providers: [provideBrowserGlobalErrorListeners()],
   bootstrap: [App],

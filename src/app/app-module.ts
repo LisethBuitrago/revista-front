@@ -5,10 +5,14 @@ import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
 import { Inicio } from './inicio/inicio';
 import { Navbar } from './navbar/navbar';
+import { LoginUsuario } from './login-usuario/login-usuario';
+import { CrearCuentaUsuario } from './crear-cuenta-usuario/crear-cuenta-usuario';
+import { FormsModule } from '@angular/forms';
+import { LoginAdministrador } from './login-administrador/login-administrador';
 
 @NgModule({
-  declarations: [App, Inicio, Navbar,],
-  imports: [BrowserModule, AppRoutingModule],
+  declarations: [App, Inicio, Navbar, LoginUsuario, CrearCuentaUsuario, LoginAdministrador],
+  imports: [BrowserModule, AppRoutingModule, FormsModule],
   providers: [provideBrowserGlobalErrorListeners()],
   bootstrap: [App],
 })

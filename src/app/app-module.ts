@@ -11,6 +11,8 @@ import { FormsModule } from '@angular/forms';
 import { LoginAdministrador } from './login-administrador/login-administrador';
 import { Editor } from './editor/editor';
 import { Usuario } from './usuario/usuario';
+import { Comentador } from './comentador/comentador';
+import { Admin } from './admin/admin';
 
 @NgModule({
   declarations: [
@@ -22,6 +24,9 @@ import { Usuario } from './usuario/usuario';
     LoginAdministrador,
     Editor,
     Usuario,
+    Comentador,
+    Comentador,
+    Admin,
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule],
   providers: [provideBrowserGlobalErrorListeners()],

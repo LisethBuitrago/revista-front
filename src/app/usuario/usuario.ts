@@ -10,7 +10,7 @@ import {Router} from '@angular/router';
 export class Usuario implements OnInit {
 
   usuario = {
-    nombre: 'Angie Villarreal',
+    nombre: 'Usuario1',
     rol: 'Usuario'
   };
 

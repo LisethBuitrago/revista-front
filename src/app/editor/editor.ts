@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 export class Editor {
 
   usuario = {
-    nombre: 'Angie Villarreal',
+    nombre: 'Editor1',
     rol: 'Editor'
   };
   vistaActual: 'menu' | 'crear' | 'comentar' = 'menu';

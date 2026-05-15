@@ -2,7 +2,7 @@
   <div class="login-card">
     <h2 class="login-title">Iniciar Sesión como administrador</h2>
 
-    <form class="login-form">
+    <form class="login-form" (ngSubmit)="registrar()">
       <div class="form-group">
         <label for="usuario">Correo</label>
         <input type="text" id="usuario" placeholder="Ingresa tu correo electronico" required>

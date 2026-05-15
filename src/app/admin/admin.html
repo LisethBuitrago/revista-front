@@ -1,0 +1,160 @@
+<div class="dashboard-container">
+  <div class="dashboard-content">
+
+    <aside class="profile-sidebar">
+      <div class="profile-card">
+        <div class="avatar-circle">
+          <i class="fa-solid fa-user-shield"></i>
+        </div>
+        <span class="welcome-text">Bienvenido,</span>
+        <h2 class="user-name">{{ usuario.nombre }}</h2>
+        <span class="role-badge">{{ usuario.rol }}</span>
+
+        <button class="btn-logout" (click)="cerrarSesion()">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar Sesión
+        </button>
+      </div>
+    </aside>
+
+
+
+    <main class="main-content">
+
+
+
+      <div class="modules-grid" *ngIf="vistaActual === 'menu'">
+        <div class="module-card">
+          <div class="module-icon">
+            <i class="fa-solid fa-users-gear"></i>
+          </div>
+          <h3>Gestión de Usuarios</h3>
+          <p>Crea, actualiza y elimina cuentas de usuarios, editores y comentadores de la plataforma.</p>
+          <button class="btn-module" (click)="cambiarVista('usuarios')">Entrar al Módulo <i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+
+        <div class="module-card">
+          <div class="module-icon">
+            <i class="fa-regular fa-newspaper"></i>
+          </div>
+          <h3>Gestión de Contenido</h3>
+          <p>Modera la revista. Elimina publicaciones o comentarios que incumplan las normas.</p>
+          <button class="btn-module" (click)="cambiarVista('publicaciones')">Entrar al Módulo <i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+      </div>
+
+
+
+
+
+      <div class="action-section" *ngIf="vistaActual === 'usuarios'">
+        <button class="btn-volver" (click)="cambiarVista('menu')">
+          <i class="fa-solid fa-arrow-left"></i> Volver al panel
+        </button>
+
+        <div class="section-header">
+          <h2>Gestión de Usuarios</h2>
+          <button class="btn-primary" (click)="cambiarVista('crear-usuario')">
+            <i class="fa-solid fa-plus"></i> Crear Usuario
+          </button>
+        </div>
+
+        <div class="table-container">
+          <table class="admin-table">
+            <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Correo</th>
+              <th>Rol</th>
+              <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>Personaje1</td>
+              <td>personaje1@gmail.com</td>
+              <td><span class="badge-rol editor">Editor</span></td>
+              <td>
+                <button class="btn-icon edit" (click)="abrirEditarUsuario({nombre: 'Personaje1', correo: 'personaje1@gmail.com', rol: 'editor'})" title="Editar">
+                  <i class="fa-solid fa-pen"></i>
+                </button>
+                <button class="btn-icon delete" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+
+
+      <div class="action-section" *ngIf="vistaActual === 'crear-usuario'">
+        <button class="btn-volver" (click)="cambiarVista('usuarios')">
+          <i class="fa-solid fa-arrow-left"></i> Volver a la tabla
+        </button>
+        <h2>Crear Nuevo Usuario</h2>
+        <form class="editor-form">
+          <input type="text" placeholder="Nombre completo" required>
+          <input type="email" placeholder="Correo electrónico" required>
+          <select required>
+            <option value="" disabled selected>Asignar rol</option>
+            <option value="usuario">Usuario Normal</option>
+            <option value="editor">Editor</option>
+            <option value="comentador">Comentador</option>
+          </select>
+          <input type="password" placeholder="Contraseña temporal" required>
+          <button type="submit" class="btn-module">Registrar Usuario</button>
+        </form>
+      </div>
+
+      <div class="action-section" *ngIf="vistaActual === 'editar-usuario'">
+        <button class="btn-volver" (click)="cambiarVista('usuarios')">
+          <i class="fa-solid fa-arrow-left"></i> Cancelar edición
+        </button>
+        <h2>Editar Usuario: {{ usuarioSeleccionado?.nombre }}</h2>
+        <form class="editor-form">
+          <label class="form-label">Nombre</label>
+          <input type="text" [(ngModel)]="usuarioSeleccionado.nombre" name="nombre">
+
+          <label class="form-label">Correo</label>
+          <input type="email" [(ngModel)]="usuarioSeleccionado.correo" name="correo">
+
+          <label class="form-label">Rol</label>
+          <select [(ngModel)]="usuarioSeleccionado.rol" name="rol">
+            <option value="usuario">Usuario Normal</option>
+            <option value="editor">Editor</option>
+            <option value="comentador">Comentador</option>
+          </select>
+
+          <button type="submit" class="btn-module">Guardar Cambios</button>
+        </form>
+      </div>
+
+
+
+
+      <div class="action-section" *ngIf="vistaActual === 'publicaciones'">
+        <button class="btn-volver" (click)="cambiarVista('menu')">
+          <i class="fa-solid fa-arrow-left"></i> Volver al panel
+        </button>
+
+        <h2>Gestión de Publicaciones</h2>
+        <p class="section-desc">Aquí puedes ver todo el contenido y eliminar lo que sea necesario.</p>
+
+        <div class="admin-list">
+          <div class="admin-list-item">
+            <div class="item-info">
+              <span class="card-tag">NOTICIA</span>
+              <h4>Gran estreno en cines: Lo que debes saber</h4>
+              <p class="item-meta">Autor: Angie Villarreal | 5 Comentarios</p>
+            </div>
+            <div class="item-actions">
+              <button class="btn-outline"><i class="fa-regular fa-comments"></i> Ver Comentarios</button>
+              <button class="btn-icon delete-lg" title="Eliminar Publicación"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>

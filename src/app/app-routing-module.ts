@@ -6,6 +6,8 @@ import {CrearCuentaUsuario} from './crear-cuenta-usuario/crear-cuenta-usuario';
 import {LoginAdministrador} from './login-administrador/login-administrador';
 import {Editor} from './editor/editor';
 import {Usuario} from './usuario/usuario';
+import {Comentador} from './comentador/comentador';
+import {Admin} from './admin/admin';
 
 const routes: Routes = [
   { path: '', component: Inicio },
@@ -14,6 +16,8 @@ const routes: Routes = [
   {path: 'login-administrador', component: LoginAdministrador },
   {path:'editor', component: Editor },
   {path:'usuario', component: Usuario },
+  {path:'comentador', component: Comentador },
+  {path: 'admin',component:Admin},
   { path: '**', redirectTo: '' }
 ];
 

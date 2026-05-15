@@ -19,8 +19,8 @@ export class Comentador {
   noticiaSeleccionada: Tarjeta | null = null;
 
   tarjetas: Tarjeta[] = [
-    { titulo: 'Las estrellas dicen...', tipo: 'HORÓSCOPO', imagen: 'https://ichef.bbci.co.uk/ace/ws/640/cpsprodpb/F403/production/_109476426_jheison3.png.webp' },
-    { titulo: 'Gran estreno en cines', tipo: 'NOTICIA', imagen: 'https://cloudfront-us-east-1.images.arcpublishing.com/infobae/UXETGRWJY5BS3MXAJLUPW2YBOQ.jpg' }
+    { titulo: 'Las estrellas dicen...', tipo: 'HORÓSCOPO', imagen:'https://depor.com/resizer/v2/5UEDBTDAIVC67FUUJR474F7ITA.jpg?auth=3756e394f1de56526b8ab7abab8356273de8fc0e4bf7ed3ec12ec6677f8726f8&width=3000&height=3000&quality=75&smart=true' },
+    { titulo: 'Gran estreno en cines', tipo: 'NOTICIA', imagen:'https://i.ytimg.com/vi/hlGbKDBzdw4/maxresdefault.jpg' }
   ];
   tarjetasFiltradas: Tarjeta[] = [...this.tarjetas];
 

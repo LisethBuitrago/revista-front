@@ -69,17 +69,32 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
-              <td>Personaje1</td>
-              <td>personaje1@gmail.com</td>
-              <td><span class="badge-rol editor">Editor</span></td>
-              <td>
-                <button class="btn-icon edit" (click)="abrirEditarUsuario({nombre: 'Personaje1', correo: 'personaje1@gmail.com', rol: 'editor'})" title="Editar">
-                  <i class="fa-solid fa-pen"></i>
-                </button>
-                <button class="btn-icon delete" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
-              </td>
-            </tr>
+            <div class="table-container">
+              <table class="admin-table">
+                <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Correo</th>
+                  <th>Rol</th>
+                  <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let user of listaUsuarios">
+                  <td>{{ user.nombre }}</td>
+                  <td>{{ user.correo }}</td>
+
+                  <td><span class="badge-rol" [ngClass]="user.rol">{{ user.rol }}</span></td>
+                  <td>
+                    <button class="btn-icon edit" (click)="abrirEditarUsuario(user)" title="Editar">
+                      <i class="fa-solid fa-pen"></i>
+                    </button>
+                    <button class="btn-icon delete" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
             </tbody>
           </table>
         </div>
@@ -145,7 +160,7 @@
             <div class="item-info">
               <span class="card-tag">NOTICIA</span>
               <h4>Gran estreno en cines: Lo que debes saber</h4>
-              <p class="item-meta">Autor: Angie Villarreal | 5 Comentarios</p>
+              <p class="item-meta">Autor: Usuario | 5 Comentarios</p>
             </div>
             <div class="item-actions">
               <button class="btn-outline"><i class="fa-regular fa-comments"></i> Ver Comentarios</button>

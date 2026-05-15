@@ -1,97 +1,120 @@
-<main class="main-content">
+<div class="editor-container">
+  <div class="editor-content">
 
-  <div class="modules-grid" *ngIf="vistaActual === 'menu'">
-    <div class="module-card">
-      <div class="module-icon">
-        <i class="fa-solid fa-pen-to-square"></i>
-      </div>
-      <h3>Crear Publicación</h3>
-      <p>Redacta y publica nuevas noticias o artículos para la revista digital.</p>
-      <button class="btn-module" (click)="cambiarVista('crear')">Entrar al Módulo <i class="fa-solid fa-arrow-right"></i></button>
-    </div>
-
-    <div class="module-card">
-      <div class="module-icon">
-        <i class="fa-regular fa-comments"></i>
-      </div>
-      <h3>Comentar Publicación</h3>
-      <p>Revisa las noticias publicadas y añade tus comentarios u opiniones.</p>
-      <button class="btn-module" (click)="cambiarVista('comentar_lista')">Entrar al Módulo <i class="fa-solid fa-arrow-right"></i></button>
-    </div>
-  </div>
-
-  <div class="action-section" *ngIf="vistaActual === 'crear'">
-    <button class="btn-volver" (click)="cambiarVista('menu')">
-      <i class="fa-solid fa-arrow-left"></i> Volver al panel
-    </button>
-    <h2>Crear Nueva Publicación</h2>
-    <form class="editor-form">
-      <input type="text" placeholder="Título de la noticia" required>
-      <select required>
-        <option value="" disabled selected>Selecciona una categoría...</option>
-        <option value="noticias">Noticia</option>
-        <option value="horoscopo">Horóscopo</option>
-      </select>
-      <div class="file-upload-wrapper">
-        <label for="imagen-portada">Sube la imagen de portada</label>
-        <input type="file" id="imagen-portada" accept="image/*" required>
-      </div>
-      <textarea placeholder="Escribe el contenido del artículo aquí..." required></textarea>
-      <button type="submit" class="btn-module">Publicar Artículo</button>
-    </form>
-  </div>
-
-  <div *ngIf="vistaActual === 'comentar_lista'">
-    <button class="btn-volver" (click)="cambiarVista('menu')" style="margin-bottom: 20px;">
-      <i class="fa-solid fa-arrow-left"></i> Volver al panel principal
-    </button>
-
-    <div class="filter-header">
-      <h2>Publicaciones para Comentar</h2>
-      <div class="filter-box">
-        <i class="fa-solid fa-filter"></i>
-        <select (change)="filtrarPorCategoria($event)">
-          <option value="TODAS" selected>Todas las categorías</option>
-          <option value="NOTICIA">Noticias</option>
-          <option value="HORÓSCOPO">Horóscopo</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="cards-grid">
-      <div class="card" *ngFor="let item of tarjetasFiltradas">
-        <div class="card-image">
-          <img [src]="item.imagen" [alt]="item.titulo">
+    <aside class="profile-sidebar">
+      <div class="profile-card">
+        <div class="avatar-circle">
+          <i class="fa-solid fa-user"></i>
         </div>
-        <div class="card-content">
-          <span class="card-tag">{{ item.tipo }}</span>
-          <h3 class="card-title">{{ item.titulo }}</h3>
-          <p class="card-description">Haz clic abajo para leer y dejar tu opinión como Editor.</p>
-          <button class="btn-comentar" (click)="abrirComentario(item)">
-            <i class="fa-regular fa-comment"></i> Comentar
+
+        <span class="welcome-text">Bienvenido,</span>
+        <h2 class="user-name">{{ usuario.nombre }}</h2>
+
+        <span class="role-badge">{{ usuario.rol }}</span>
+
+        <button class="btn-logout" (click)="cerrarSesion()">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar Sesión
+        </button>
+      </div>
+    </aside>
+
+    <div class="main-content">
+
+      <div class="modules-grid" *ngIf="vistaActual === 'menu'">
+        <div class="module-card">
+          <div class="module-icon">
+            <i class="fa-solid fa-pen-to-square"></i>
+          </div>
+          <h3>Crear Publicación</h3>
+          <p>Redacta y publica nuevas noticias o artículos para la revista digital.</p>
+          <button class="btn-module" (click)="cambiarVista('crear')">
+            Entrar al Módulo <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+
+        <div class="module-card">
+          <div class="module-icon">
+            <i class="fa-regular fa-comments"></i>
+          </div>
+          <h3>Comentar Publicación</h3>
+          <p>Revisa las noticias publicadas y añade tus comentarios u opiniones.</p>
+          <button class="btn-module" (click)="cambiarVista('comentar_lista')">
+            Entrar al Módulo <i class="fa-solid fa-arrow-right"></i>
           </button>
         </div>
       </div>
-    </div>
-  </div>
 
-  <div class="action-section" *ngIf="vistaActual === 'comentar_detalle'">
-    <button class="btn-volver" (click)="cambiarVista('comentar_lista')">
-      <i class="fa-solid fa-arrow-left"></i> Volver a la lista
-    </button>
+      <div class="action-section" *ngIf="vistaActual === 'crear'">
+        <button class="btn-volver" (click)="cambiarVista('menu')">
+          <i class="fa-solid fa-arrow-left"></i> Volver al panel
+        </button>
 
-    <div class="noticia-detalle">
-      <span class="card-tag">{{ noticiaSeleccionada?.tipo }}</span>
-      <h2>{{ noticiaSeleccionada?.titulo }}</h2>
-      <img [src]="noticiaSeleccionada?.imagen" class="img-preview">
-      <p class="texto-noticia">Aquí va el contenido completo de la noticia que el editor está leyendo para poder opinar con fundamento...</p>
-    </div>
+        <h2>Crear Nueva Publicación</h2>
+        <form class="editor-form">
+          <input type="text" placeholder="Título de la noticia" required>
+          <select required>
+            <option value="" disabled selected>Selecciona una categoría...</option>
+            <option value="noticias">Noticia</option>
+            <option value="horoscopo">Horóscopo</option>
+          </select>
+          <textarea placeholder="Escribe el contenido del artículo aquí..." required></textarea>
 
-    <div class="comment-box">
-      <h3>Añade tu comentario oficial</h3>
-      <textarea placeholder="Escribe tu comentario o respuesta como Editor de Prisma Magazine..."></textarea>
-      <button class="btn-enviar">Publicar Comentario</button>
-    </div>
-  </div>
+          <button type="submit" class="btn-module">Publicar Artículo</button>
+        </form>
+      </div>
 
-</main>
+      <div *ngIf="vistaActual === 'comentar_lista'">
+        <button class="btn-volver" (click)="cambiarVista('menu')" style="margin-bottom: 20px;">
+          <i class="fa-solid fa-arrow-left"></i> Volver al panel principal
+        </button>
+
+        <div class="filter-header">
+          <h2>Publicaciones para Comentar</h2>
+          <div class="filter-box">
+            <i class="fa-solid fa-filter"></i>
+            <select (change)="filtrarPorCategoria($event)">
+              <option value="TODAS" selected>Todas las categorías</option>
+              <option value="NOTICIA">Noticias</option>
+              <option value="HORÓSCOPO">Horóscopo</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="cards-grid">
+          <div class="card" *ngFor="let item of tarjetasFiltradas">
+            <div class="card-image">
+              <img [src]="item.imagen" [alt]="item.titulo">
+            </div>
+            <div class="card-content">
+              <span class="card-tag">{{ item.tipo }}</span>
+              <h3 class="card-title">{{ item.titulo }}</h3>
+              <p class="card-description">Haz clic abajo para leer y dejar tu opinión como Editor.</p>
+              <button class="btn-comentar" (click)="abrirComentario(item)">
+                <i class="fa-regular fa-comment"></i> Comentar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="action-section" *ngIf="vistaActual === 'comentar_detalle'">
+        <button class="btn-volver" (click)="cambiarVista('comentar_lista')">
+          <i class="fa-solid fa-arrow-left"></i> Volver a la lista
+        </button>
+
+        <div class="noticia-detalle">
+          <span class="card-tag">{{ noticiaSeleccionada?.tipo }}</span>
+          <h2>{{ noticiaSeleccionada?.titulo }}</h2>
+          <img [src]="noticiaSeleccionada?.imagen" class="img-preview">
+          <p class="texto-noticia">Aquí va el contenido completo de la noticia que el editor está leyendo para poder opinar con fundamento...</p>
+        </div>
+
+        <div class="comment-box">
+          <h3>Añade tu comentario oficial</h3>
+          <textarea placeholder="Escribe tu comentario o respuesta como Editor de Prisma Magazine..."></textarea>
+          <button class="btn-enviar">Publicar Comentario</button>
+        </div>
+      </div>
+
+    </div> </div>
+</div>

@@ -1,6 +1,12 @@
 import { Component } from '@angular/core';
 import {Router} from '@angular/router';
 
+interface Tarjeta {
+  titulo: string;
+  tipo: 'HORÓSCOPO' | 'NOTICIA';
+  imagen: string;
+}
+
 @Component({
   selector: 'app-comentador',
   standalone: false,
@@ -10,17 +16,17 @@ import {Router} from '@angular/router';
 export class Comentador {
   usuario = { nombre: 'Comentador1', rol: 'Comentador' };
   vistaActual: 'lista' | 'comentar' = 'lista';
-  noticiaSeleccionada: any = null;
+  noticiaSeleccionada: Tarjeta | null = null;
 
-  tarjetas = [
+  tarjetas: Tarjeta[] = [
     { titulo: 'Las estrellas dicen...', tipo: 'HORÓSCOPO', imagen: 'https://ichef.bbci.co.uk/ace/ws/640/cpsprodpb/F403/production/_109476426_jheison3.png.webp' },
     { titulo: 'Gran estreno en cines', tipo: 'NOTICIA', imagen: 'https://cloudfront-us-east-1.images.arcpublishing.com/infobae/UXETGRWJY5BS3MXAJLUPW2YBOQ.jpg' }
   ];
-  tarjetasFiltradas = [...this.tarjetas];
+  tarjetasFiltradas: Tarjeta[] = [...this.tarjetas];
 
   constructor(private router: Router) {}
 
-  abrirComentario(noticia: any) {
+  abrirComentario(noticia: Tarjeta): void {
     this.noticiaSeleccionada = noticia;
     this.vistaActual = 'comentar';
   }
@@ -36,5 +42,5 @@ export class Comentador {
       );
     }
   }
-  cerrarSesion() { this.router.navigate(['/login-usuario']); }
+  cerrarSesion():void { this.router.navigate(['/login-usuario']); }
 }

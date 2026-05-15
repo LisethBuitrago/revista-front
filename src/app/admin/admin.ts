@@ -10,16 +10,22 @@ import {Router} from '@angular/router';
 export class Admin {
   usuario = { nombre: 'Administrador', rol: 'Administrador' };
   vistaActual: 'menu' | 'usuarios' | 'publicaciones' | 'crear-usuario' | 'editar-usuario' = 'menu';
-  usuarioSeleccionado: { nombre: string; rol: string } | null = null;
+  usuarioSeleccionado: any = null;
+
+  listaUsuarios = [
+    { nombre: 'Usuario1', correo: 'usuario1@gmail.com', rol: 'usuario' },
+    { nombre: 'Usuario2', correo: 'usuario2@gmail.com', rol: 'editor' },
+    { nombre: 'Usuario3', correo: 'usuario3@gmail.com', rol: 'comentador' }
+  ];
   constructor(private router: Router) {}
-  cambiarVista(vista: 'menu' | 'usuarios' | 'publicaciones' | 'crear-usuario' | 'editar-usuario'): void {
+  cambiarVista(vista: any) {
     this.vistaActual = vista;
   }
-  abrirEditarUsuario(user: { nombre: string; rol: string }): void {
+  abrirEditarUsuario(user: any) {
     this.usuarioSeleccionado = { ...user };
     this.vistaActual = 'editar-usuario';
   }
-  cerrarSesion():void {
+  cerrarSesion() {
     this.router.navigate(['/login-administrador']);
   }
 }

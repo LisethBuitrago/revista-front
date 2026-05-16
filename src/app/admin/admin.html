@@ -1,7 +1,7 @@
 <div class="dashboard-container">
   <div class="dashboard-content">
 
-    <aside class="profile-sidebar">
+    <div class="profile-sidebar">
       <div class="profile-card">
         <div class="avatar-circle">
           <i class="fa-solid fa-user-shield"></i>
@@ -14,13 +14,9 @@
           <i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar Sesión
         </button>
       </div>
-    </aside>
+    </div>
 
-
-
-    <main class="main-content">
-
-
+    <div class="main-content">
 
       <div class="modules-grid" *ngIf="vistaActual === 'menu'">
         <div class="module-card">
@@ -42,10 +38,6 @@
         </div>
       </div>
 
-
-
-
-
       <div class="action-section" *ngIf="vistaActual === 'usuarios'">
         <button class="btn-volver" (click)="cambiarVista('menu')">
           <i class="fa-solid fa-arrow-left"></i> Volver al panel
@@ -58,65 +50,61 @@
           </button>
         </div>
 
-        <div class="table-container">
-          <table class="admin-table">
-            <thead>
-            <tr>
-              <th>Nombre</th>
-              <th>Correo</th>
-              <th>Rol</th>
-              <th>Acciones</th>
-            </tr>
-            </thead>
-            <tbody>
-            <div class="table-container">
-              <table class="admin-table">
-                <thead>
-                <tr>
-                  <th>Nombre</th>
-                  <th>Correo</th>
-                  <th>Rol</th>
-                  <th>Acciones</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr *ngFor="let user of listaUsuarios">
-                  <td>{{ user.nombre }}</td>
-                  <td>{{ user.correo }}</td>
+        <div class="div-table-container">
+          <div class="div-table">
 
-                  <td><span class="badge-rol" [ngClass]="user.rol">{{ user.rol }}</span></td>
-                  <td>
-                    <button class="btn-icon edit" (click)="abrirEditarUsuario(user)" title="Editar">
-                      <i class="fa-solid fa-pen"></i>
-                    </button>
-                    <button class="btn-icon delete" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
-                  </td>
-                </tr>
-                </tbody>
-              </table>
+            <div class="div-table-header">
+              <div class="div-col">Nombre</div>
+              <div class="div-col">Correo</div>
+              <div class="div-col">Rol</div>
+              <div class="div-col text-center">Acciones</div>
             </div>
-            </tbody>
-          </table>
+
+            <div class="div-table-row" *ngFor="let user of listaUsuarios">
+              <div class="div-col">{{ user.nombre }}</div>
+              <div class="div-col">{{ user.correo }}</div>
+              <div class="div-col">
+                <span class="badge-rol" [ngClass]="(user.rol || 'usuario').toLowerCase()">{{ user.rol || 'SIN ROL' }}</span>
+              </div>
+              <div class="div-col actions-col">
+                <button class="btn-icon edit" (click)="abrirEditarUsuario(user)" title="Editar">
+                  <i class="fa-solid fa-pen"></i>
+                </button>
+                <button class="btn-icon delete" title="Eliminar" (click)="eliminarUsuario(user.id)">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </div>
+            </div>
+
+          </div>
         </div>
       </div>
-
-
 
       <div class="action-section" *ngIf="vistaActual === 'crear-usuario'">
         <button class="btn-volver" (click)="cambiarVista('usuarios')">
           <i class="fa-solid fa-arrow-left"></i> Volver a la tabla
         </button>
         <h2>Crear Nuevo Usuario</h2>
-        <form class="editor-form">
-          <input type="text" placeholder="Nombre completo" required>
-          <input type="email" placeholder="Correo electrónico" required>
-          <select required>
-            <option value="" disabled selected>Asignar rol</option>
-            <option value="usuario">Usuario Normal</option>
-            <option value="editor">Editor</option>
-            <option value="comentador">Comentador</option>
+
+        <form class="editor-form" (ngSubmit)="registrarUsuario()">
+          <label class="form-label">Nombre Completo</label>
+          <input type="text" [(ngModel)]="nuevoUsuario.nombre" name="nuevoNombre" placeholder="Ej. Juan Pérez" required>
+
+          <label class="form-label">Correo Electrónico</label>
+          <input type="email" [(ngModel)]="nuevoUsuario.correo" name="nuevoCorreo" placeholder="Ej. juan@correo.com" required>
+
+          <label class="form-label">Asignar Rol de Usuario</label>
+          <select [(ngModel)]="nuevoUsuario.rol" name="nuevoRol" required>
+            <option value="" disabled selected>Seleccione un rol...</option>
+            <option value="USUARIO">Usuario Normal</option>
+            <option value="EDITOR">Editor</option>
+            <option value="COMENTADOR">Comentador</option>
+            <option value="ADMINISTRADOR">Administrador</option>
           </select>
-          <input type="password" placeholder="Contraseña temporal" required>
+
+          <label class="form-label">Contraseña Temporal</label>
+          <input type="password" [(ngModel)]="nuevoUsuario.contrasenia" name="nuevaContrasenia" placeholder="Mínimo 6 caracteres" required>
+
           <button type="submit" class="btn-module">Registrar Usuario</button>
         </form>
       </div>
@@ -125,27 +113,29 @@
         <button class="btn-volver" (click)="cambiarVista('usuarios')">
           <i class="fa-solid fa-arrow-left"></i> Cancelar edición
         </button>
-        <h2>Editar Usuario: {{ usuarioSeleccionado?.nombre }}</h2>
-        <form class="editor-form">
-          <label class="form-label">Nombre</label>
-          <input type="text" [(ngModel)]="usuarioSeleccionado.nombre" name="nombre">
 
-          <label class="form-label">Correo</label>
-          <input type="email" [(ngModel)]="usuarioSeleccionado.correo" name="correo">
+        <ng-container *ngIf="usuarioSeleccionado">
+          <h2>Editar Usuario: {{ usuarioSeleccionado.nombre }}</h2>
 
-          <label class="form-label">Rol</label>
-          <select [(ngModel)]="usuarioSeleccionado.rol" name="rol">
-            <option value="usuario">Usuario Normal</option>
-            <option value="editor">Editor</option>
-            <option value="comentador">Comentador</option>
-          </select>
+          <form class="editor-form" (ngSubmit)="guardarCambios()">
+            <label class="form-label">Nombre</label>
+            <input type="text" [(ngModel)]="usuarioSeleccionado.nombre" name="nombre" required>
 
-          <button type="submit" class="btn-module">Guardar Cambios</button>
-        </form>
+            <label class="form-label">Correo</label>
+            <input type="email" [(ngModel)]="usuarioSeleccionado.correo" name="correo" required>
+
+            <label class="form-label">Rol</label>
+            <select [(ngModel)]="usuarioSeleccionado.rol" name="rol" required>
+              <option value="USUARIO">Usuario Normal</option>
+              <option value="EDITOR">Editor</option>
+              <option value="COMENTADOR">Comentador</option>
+              <option value="ADMINISTRADOR">Administrador</option>
+            </select>
+
+            <button type="submit" class="btn-module">Guardar Cambios</button>
+          </form>
+        </ng-container>
       </div>
-
-
-
 
       <div class="action-section" *ngIf="vistaActual === 'publicaciones'">
         <button class="btn-volver" (click)="cambiarVista('menu')">
@@ -170,6 +160,13 @@
         </div>
       </div>
 
-    </main>
+    </div>
+  </div>
+</div>
+<div class="modal-overlay" *ngIf="alertaVisible">
+  <div class="modal-card">
+    <h3>{{ alertaEsExito ? '¡Éxito!' : 'Aviso' }}</h3>
+    <p>{{ alertaMensaje }}</p>
+    <button class="btn-module" (click)="cerrarAlerta()">Continuar</button>
   </div>
 </div>

@@ -1,6 +1,7 @@
-import {Component, inject} from '@angular/core';
-import {Router} from '@angular/router';
-import {AuthService} from '../services/auth-service';
+import { Component, inject, ChangeDetectorRef } from '@angular/core'; // 💡 Importamos ChangeDetectorRef
+import { Router } from '@angular/router';
+import { AuthService } from '../services/auth-service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-crear-cuenta-usuario',
@@ -11,6 +12,7 @@ import {AuthService} from '../services/auth-service';
 export class CrearCuentaUsuario {
   private authService = inject(AuthService);
   private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
 
   nombre = '';
   correo = '';
@@ -20,12 +22,15 @@ export class CrearCuentaUsuario {
   alertaVisible = false;
   alertaMensaje = '';
   alertaEsExito = false;
+  cargando = false;
 
   registrar() {
     if (!this.nombre || !this.correo || !this.contrasenia || !this.rol) {
       this.mostrarAlerta('¡Debes llenar todos los campos!', false);
       return;
     }
+
+    this.cargando = true;
 
     const nuevoUsuario = {
       nombre: this.nombre,
@@ -34,20 +39,28 @@ export class CrearCuentaUsuario {
       rol: this.rol
     };
 
-    this.authService.registrar(nuevoUsuario).subscribe({
-      next: (respuestaTexto) => {
-        this.mostrarAlerta(respuestaTexto, true);
-      },
-      error: (err) => {
-        console.error(err);
-        if (err.status === 409) {
-          this.mostrarAlerta('Error: Ese nombre ya está en uso. Intenta con otro.', false);
-        } else {
-          this.mostrarAlerta(`Error al registrar: ${err.error || 'No se pudo conectar con el servidor.'}`, false);
-
+    this.authService.registrar(nuevoUsuario)
+      .pipe(
+        finalize(() => {
+          this.cargando = false;
+          this.cdr.detectChanges();
+        })
+      )
+      .subscribe({
+        next: (respuestaTexto) => {
+          this.mostrarAlerta(respuestaTexto, true);
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error(err);
+          if (err.status === 409) {
+            this.mostrarAlerta('Error: Ese nombre ya está en uso. Intenta con otro.', false);
+          } else {
+            this.mostrarAlerta(`Error al registrar: ${err.error || 'No se pudo conectar con el servidor.'}`, false);
+          }
+          this.cdr.detectChanges();
         }
-      }
-    });
+      });
   }
 
   mostrarAlerta(mensaje: string, exito: boolean) {
@@ -58,8 +71,11 @@ export class CrearCuentaUsuario {
 
   cerrarAlerta() {
     this.alertaVisible = false;
+
     if (this.alertaEsExito) {
-      this.router.navigate(['/login-usuario']);
+      setTimeout(() => {
+        this.router.navigate(['/login-usuario']);
+      }, 0);
     }
   }
 }

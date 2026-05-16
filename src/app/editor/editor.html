@@ -67,8 +67,13 @@
           <textarea
             name="contenido"
             [(ngModel)]="nuevoContenido"
-            placeholder="Escribe el contenido del artículo aquí..."
+            placeholder="Escribe el contenido del artículo aquí (Máximo 255 caracteres)..."
+            maxlength="255"
             required></textarea>
+
+          <small style="color: gray; display: block; text-align: right; margin-bottom: 15px;">
+            {{ nuevoContenido.length || 0 }} / 255 caracteres
+          </small>
 
           <button type="submit" class="btn-module" [disabled]="cargando">
             {{ cargando ? 'Publicando...' : 'Publicar Artículo' }}

@@ -9,11 +9,11 @@ import { AuthService} from '../services/auth-service';
   styleUrls: ['./login-administrador.css']
 })
 export class LoginAdministrador {
-  correo: string = '';
-  contrasena: string = '';
-  errorMessage: string = '';
-  successMessage: string = '';
-  isLoading: boolean = false;
+  correo = '';
+  contrasena = '';
+  errorMessage = '';
+  successMessage = '';
+  isLoading = false;
 
   constructor(
     private authService: AuthService,
@@ -35,7 +35,6 @@ export class LoginAdministrador {
         this.isLoading = false;
         console.log('Login exitoso', response);
 
-        // Verificar que el rol sea ADMINISTRADOR
         const rol = this.authService.getRol();
 
         if (rol === 'ADMINISTRADOR') {
@@ -45,7 +44,7 @@ export class LoginAdministrador {
             this.router.navigate(['/admin']);
           }, 1500);
         } else {
-          // Si no es administrador, mostrar error y cerrar sesión
+
           this.errorMessage = 'Acceso denegado. Esta área es solo para administradores.';
           this.authService.logout();
         }

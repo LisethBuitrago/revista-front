@@ -1,7 +1,7 @@
 <div class="dashboard-container">
   <div class="dashboard-content">
 
-    <aside class="profile-sidebar">
+    <div class="profile-sidebar">
       <div class="profile-card">
         <div class="avatar-circle">
           <i class="fa-solid fa-user"></i>
@@ -16,24 +16,24 @@
           <i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar Sesión
         </button>
       </div>
-    </aside>
+    </div>
 
-    <main class="main-content">
+    <div class="main-content">
 
       <div class="filter-header">
         <h2>Últimas Publicaciones</h2>
         <div class="filter-box">
           <i class="fa-solid fa-filter"></i>
-          <select>
-            <option value="todas" selected>Todas las categorías</option>
-            <option value="noticias">Noticias</option>
-            <option value="horoscopo">Horóscopo</option>
+          <select (change)="filtrarPorCategoria($event)">
+            <option value="TODAS" selected>Todas las categorías</option>
+            <option value="NOTICIA">Noticias</option>
+            <option value="HOROSCOPO">Horóscopo</option>
           </select>
         </div>
       </div>
 
       <div class="cards-grid">
-        <div class="card" *ngFor="let item of tarjetas">
+        <div class="card" *ngFor="let item of tarjetasFiltradas">
           <div class="card-image">
             <img [src]="item.imagen" [alt]="item.titulo">
           </div>
@@ -41,14 +41,32 @@
           <div class="card-content">
             <span class="card-tag">{{ item.tipo }}</span>
             <h3 class="card-title">{{ item.titulo }}</h3>
-            <p class="card-description">Explora los detalles más importantes en nuestra edición. Suscríbete para más.</p>
+            <p class="card-description">{{ item.contenido }}</p>
 
-            <button class="btn-leer">Leer artículo</button>
+            <button class="btn-leer" (click)="abrirPublicacion(item)">
+              Leer completo <i class="fa-solid fa-arrow-right"></i>
+            </button>
           </div>
         </div>
       </div>
 
-    </main>
+    </div> </div> </div> <div class="modal-overlay" *ngIf="modalVisible">
+  <div class="modal-card leer-card">
+    <span class="card-tag modal-tag">{{ publicacionSeleccionada?.tipo }}</span>
+    <h2 class="modal-titulo">{{ publicacionSeleccionada?.titulo }}</h2>
 
+    <p class="modal-fecha">
+      Publicado el: {{ publicacionSeleccionada?.fechaCreacion | date:'medium' }}
+    </p>
+
+    <img [src]="publicacionSeleccionada?.imagen" class="modal-img">
+
+    <p class="modal-texto">
+      {{ publicacionSeleccionada?.contenido }}
+    </p>
+
+    <button class="btn-cerrar-modal" (click)="cerrarModal()">
+      Cerrar publicación
+    </button>
   </div>
 </div>

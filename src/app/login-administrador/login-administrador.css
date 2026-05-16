@@ -80,7 +80,7 @@
   cursor: not-allowed;
 }
 
-/* Mensaje de error */
+
 .error-message {
   background-color: #fee;
   color: #c00;
@@ -92,7 +92,7 @@
   border-left: 4px solid #c00;
 }
 
-/* Mensaje de éxito */
+
 .success-message {
   background-color: #e8f5e9;
   color: #2e7d32;

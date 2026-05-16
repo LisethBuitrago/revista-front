@@ -4,6 +4,7 @@ import { EncriptadorService } from '../services/encriptador-service';
 import { PublicacionService} from '../services/publicacion-service';
 import { PublicacionModel } from '../models/publicacion.model';
 import { finalize } from 'rxjs';
+import {PublicacionService} from '../services/publicacion-service';
 
 @Component({
   selector: 'app-editor',
@@ -67,7 +68,7 @@ export class Editor implements OnInit {
     this.publicacionService.listarTodas().subscribe({
       next: (datos: PublicacionModel[]) => {
         this.tarjetas = datos.map(item => {
-          const esHoroscopo = item.tipo.toUpperCase() === 'HORÓSCOPO';
+          const esHoroscopo = item.tipo.toUpperCase() === 'HOROSCOPO';
 
           const nuevaCard = {
             ...item,
@@ -152,7 +153,7 @@ export class Editor implements OnInit {
 
     this.cargando = true;
 
-    const imagenAutomatica = this.nuevoTipo === 'HORÓSCOPO' ? this.img2 : this.img1;
+    const imagenAutomatica = this.nuevoTipo === 'HOROSCOPO' ? this.img2 : this.img1;
 
     const nuevaPublicacion = {
       titulo: this.nuevoTitulo,

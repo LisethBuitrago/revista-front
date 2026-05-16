@@ -53,7 +53,7 @@ export class Comentador {
 
   validarLongitud(): void {
     if (this.comentarioTexto.length > 255) {
-      this.mensajeError = '❌ El comentario no puede exceder los 255 caracteres.';
+      this.mensajeError = 'El comentario no puede exceder los 255 caracteres.';
     } else {
       this.mensajeError = '';
     }
@@ -68,17 +68,17 @@ export class Comentador {
 
   enviarComentario(): void {
     if (this.comentarioTexto.length > 255) {
-      this.mensajeError = '❌ El comentario excede el límite de 255 caracteres.';
+      this.mensajeError = 'El comentario excede el límite de 255 caracteres.';
       return;
     }
 
     if (!this.comentarioTexto || this.comentarioTexto.trim() === '') {
-      this.mensajeError = '❌ El comentario no puede estar vacío';
+      this.mensajeError = 'El comentario no puede estar vacío';
       return;
     }
 
     if (!this.noticiaSeleccionada) {
-      this.mensajeError = '❌ No hay noticia seleccionada';
+      this.mensajeError = 'No hay noticia seleccionada';
       return;
     }
 
@@ -93,7 +93,7 @@ export class Comentador {
 
     this.comentarioService.crear(comentarioParaEnviar).subscribe({
       next: (respuesta) => {
-        console.log('✅ Comentario enviado:', respuesta);
+        console.log('Comentario enviado:', respuesta);
         this.enviando = false;
         this.comentarioTexto = '';
         this.noticiaSeleccionada = null;
@@ -104,7 +104,7 @@ export class Comentador {
         alert('¡Comentario enviado exitosamente!');
       },
       error: (error) => {
-        console.error('❌ Error al enviar:', error);
+        console.error('Error al enviar:', error);
 
         if (error.status === 200 || error.status === 201) {
           this.enviando = false;
@@ -116,7 +116,7 @@ export class Comentador {
           this.cdr.detectChanges();
           alert('¡Comentario enviado exitosamente!');
         } else {
-          this.mensajeError = `❌ Error ${error.status}: Intente nuevamente.`;
+          this.mensajeError = `Error ${error.status}: Intente nuevamente.`;
           this.enviando = false;
 
           this.cdr.detectChanges();

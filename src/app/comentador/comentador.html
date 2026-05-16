@@ -62,8 +62,34 @@
 
         <div class="comment-box">
           <h3>Deja tu comentario</h3>
-          <textarea placeholder="Escribe lo que piensas sobre esta noticia..."></textarea>
-          <button class="btn-enviar">Enviar Comentario</button>
+
+          <div *ngIf="mensajeError" class="error-message">
+            <i class="fa-solid fa-circle-exclamation"></i> {{ mensajeError }}
+          </div>
+
+          <!-- CONTADOR DE CARACTERES -->
+          <div class="char-counter" [class.char-exceed]="comentarioTexto.length > 255">
+            <i class="fa-regular fa-keyboard"></i>
+            {{ comentarioTexto.length }}/255 caracteres
+            <span *ngIf="comentarioTexto.length > 255" class="exceed-warning">⚠️ Límite excedido</span>
+          </div>
+
+          <textarea
+            [(ngModel)]="comentarioTexto"
+            placeholder="Escribe lo que piensas sobre esta noticia... (máximo 255 caracteres)"
+            [disabled]="enviando"
+            maxlength="255"
+            (input)="validarLongitud()"
+          ></textarea>
+
+          <button
+            class="btn-enviar"
+            (click)="enviarComentario()"
+            [disabled]="enviando || comentarioTexto.length > 255 || comentarioTexto.trim().length === 0"
+          >
+            <i class="fa-regular fa-paper-plane"></i>
+            {{ enviando ? 'Enviando...' : 'Enviar Comentario' }}
+          </button>
         </div>
       </div>
 

@@ -35,13 +35,10 @@ export class LoginUsuario {
         this.isLoading = false;
         console.log('Login exitoso', response);
 
-        // Mostrar mensaje de éxito
         this.successMessage = '¡Inicio de sesión exitoso! Redirigiendo...';
 
-        // Obtener el rol del usuario
         const rol = this.authService.getRol();
 
-        // Redirigir según el rol después de 1.5 segundos
         setTimeout(() => {
           this.redirigirPorRol(rol);
         }, 1500);

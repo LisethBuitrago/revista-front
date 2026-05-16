@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { ComentarioService } from '../services/comentario-service';
 
@@ -29,16 +29,26 @@ export class Comentador {
   enviando: boolean = false;
 
   tarjetas: Tarjeta[] = [
-    { id: 1, titulo: 'Las estrellas dicen...', tipo: 'HORÓSCOPO',
-      imagen:'https://depor.com/resizer/v2/5UEDBTDAIVC67FUUJR474F7ITA.jpg?auth=3756e394f1de56526b8ab7abab8356273de8fc0e4bf7ed3ec12ec6677f8726f8&width=3000&height=3000&quality=75&smart=true' },
-    { id: 2, titulo: 'Gran estreno en cines', tipo: 'NOTICIA',
-      imagen:'https://i.ytimg.com/vi/hlGbKDBzdw4/maxresdefault.jpg' }
+    {
+      id: 1,
+      titulo: 'Las estrellas dicen...',
+      tipo: 'HORÓSCOPO',
+      imagen: 'https://depor.com/resizer/v2/5UEDBTDAIVC67FUUJR474F7ITA.jpg?auth=3756e394f1de56526b8ab7abab8356273de8fc0e4bf7ed3ec12ec6677f8726f8&width=3000&height=3000&quality=75&smart=true'
+    },
+    {
+      id: 2,
+      titulo: 'Gran estreno en cines',
+      tipo: 'NOTICIA',
+      imagen: 'https://i.ytimg.com/vi/hlGbKDBzdw4/maxresdefault.jpg'
+    }
   ];
+
   tarjetasFiltradas: Tarjeta[] = [...this.tarjetas];
 
   constructor(
     private router: Router,
-    private comentarioService: ComentarioService
+    private comentarioService: ComentarioService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   validarLongitud(): void {
@@ -89,22 +99,27 @@ export class Comentador {
         this.noticiaSeleccionada = null;
         this.mensajeError = '';
         this.vistaActual = 'lista';
+
+        this.cdr.detectChanges();
         alert('¡Comentario enviado exitosamente!');
       },
       error: (error) => {
         console.error('❌ Error al enviar:', error);
-        // Si el backend responde pero con error HTTP, igual puede haber guardado
-        // Forzamos el retorno a la lista de todas formas
+
         if (error.status === 200 || error.status === 201) {
           this.enviando = false;
           this.comentarioTexto = '';
           this.noticiaSeleccionada = null;
           this.mensajeError = '';
           this.vistaActual = 'lista';
+
+          this.cdr.detectChanges();
           alert('¡Comentario enviado exitosamente!');
         } else {
           this.mensajeError = `❌ Error ${error.status}: Intente nuevamente.`;
           this.enviando = false;
+
+          this.cdr.detectChanges();
         }
       }
     });
@@ -113,6 +128,7 @@ export class Comentador {
   filtrarPorCategoria(event: Event): void {
     const selectElement = event.target as HTMLSelectElement;
     const categoriaSeleccionada = selectElement.value.toUpperCase();
+
     if (categoriaSeleccionada === 'TODAS') {
       this.tarjetasFiltradas = [...this.tarjetas];
     } else {

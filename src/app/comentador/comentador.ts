@@ -41,6 +41,17 @@ export class Comentador {
     private comentarioService: ComentarioService
   ) {}
 
+  // VALIDACIÓN DE LONGITUD DEL COMENTARIO
+  validarLongitud(): void {
+    if (this.comentarioTexto.length > 255) {
+      this.mensajeError = '❌ El comentario no puede exceder los 255 caracteres.';
+    } else if (this.comentarioTexto.length === 0) {
+      this.mensajeError = '';
+    } else {
+      this.mensajeError = '';
+    }
+  }
+
   abrirComentario(noticia: Tarjeta): void {
     this.noticiaSeleccionada = noticia;
     this.comentarioTexto = '';
@@ -49,13 +60,21 @@ export class Comentador {
   }
 
   enviarComentario(): void {
-    if (!this.comentarioTexto || this.comentarioTexto.trim() === '') {
-      this.mensajeError = 'El comentario no puede estar vacío';
+    // VALIDACIÓN DE LONGITUD MÁXIMA
+    if (this.comentarioTexto.length > 255) {
+      this.mensajeError = '❌ El comentario excede el límite de 255 caracteres.';
       return;
     }
 
+    // VALIDACIÓN DE CAMPO VACÍO
+    if (!this.comentarioTexto || this.comentarioTexto.trim() === '') {
+      this.mensajeError = '❌ El comentario no puede estar vacío';
+      return;
+    }
+
+    // VALIDACIÓN DE NOTICIA SELECCIONADA
     if (!this.noticiaSeleccionada) {
-      this.mensajeError = 'No hay noticia seleccionada';
+      this.mensajeError = '❌ No hay noticia seleccionada';
       return;
     }
 
@@ -74,6 +93,7 @@ export class Comentador {
         alert('¡Comentario enviado exitosamente!');
         this.vistaActual = 'lista';
         this.enviando = false;
+        this.comentarioTexto = '';
       },
       error: (error) => {
         console.error('Error al enviar comentario:', error);

@@ -12,6 +12,7 @@ export class LoginUsuario {
   correo: string = '';
   contrasena: string = '';
   errorMessage: string = '';
+  successMessage: string = '';
   isLoading: boolean = false;
 
   constructor(
@@ -27,28 +28,27 @@ export class LoginUsuario {
 
     this.isLoading = true;
     this.errorMessage = '';
+    this.successMessage = '';
 
     this.authService.loginConCorreo(this.correo, this.contrasena).subscribe({
       next: (response) => {
         this.isLoading = false;
         console.log('Login exitoso', response);
 
+        this.successMessage = '¡Inicio de sesión exitoso! Redirigiendo...';
+
         const rol = this.authService.getRol();
-        if (rol === 'ADMIN') {
-          this.router.navigate(['/admin/dashboard']);
-        } else if (rol === 'USUARIO') {
-          this.router.navigate(['/user/dashboard']);
-        } else {
-          this.router.navigate(['/dashboard']);
-        }
+
+        setTimeout(() => {
+          this.redirigirPorRol(rol);
+        }, 1500);
       },
       error: (error) => {
         this.isLoading = false;
-        console.log('Error recibido:', error);
+        console.error('Error:', error);
 
-        // Mostrar el mensaje que envía el backend
         if (typeof error.error === 'string') {
-          this.errorMessage = error.error;  // Mensaje del backend
+          this.errorMessage = error.error;
         } else if (error.status === 401) {
           this.errorMessage = 'Correo o contraseña incorrectos';
         } else if (error.status === 0) {
@@ -58,5 +58,25 @@ export class LoginUsuario {
         }
       }
     });
+  }
+
+  private redirigirPorRol(rol: string | null) {
+    switch (rol) {
+      case 'EDITOR':
+        this.router.navigate(['/editor']);
+        break;
+      case 'COMENTADOR':
+        this.router.navigate(['/comentador']);
+        break;
+      case 'USUARIO':
+        this.router.navigate(['/usuario']);
+        break;
+      case 'ADMINISTRADOR':
+        this.router.navigate(['/admin']);
+        break;
+      default:
+        this.router.navigate(['/usuario']);
+        break;
+    }
   }
 }

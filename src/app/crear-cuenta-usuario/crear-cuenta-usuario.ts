@@ -12,14 +12,18 @@ export class CrearCuentaUsuario {
   private authService = inject(AuthService);
   private router = inject(Router);
 
-  nombre: string = '';
-  correo: string = '';
-  contrasenia: string = '';
-  rol: string = 'USUARIO';
+  nombre = '';
+  correo = '';
+  contrasenia = '';
+  rol = 'USUARIO';
+
+  alertaVisible: boolean = false;
+  alertaMensaje: string = '';
+  alertaEsExito: boolean = false;
 
   registrar() {
     if (!this.nombre || !this.correo || !this.contrasenia || !this.rol) {
-      alert('¡Debes llenar todos los campos!');
+      this.mostrarAlerta('¡Debes llenar todos los campos!', false);
       return;
     }
 
@@ -32,17 +36,29 @@ export class CrearCuentaUsuario {
 
     this.authService.registrar(nuevoUsuario).subscribe({
       next: (respuestaTexto) => {
-        alert(respuestaTexto);
-        this.router.navigate(['/login-usuario']);
+        this.mostrarAlerta(respuestaTexto, true);
       },
       error: (err) => {
         console.error(err);
         if (err.status === 409) {
-          alert('Error: Ese nombre ya está en uso. Intenta con otro.');
+          this.mostrarAlerta('Error: Ese nombre ya está en uso. Intenta con otro.', false);
         } else {
-          alert('Error al registrar: ' + (err.error || 'No se pudo conectar con el servidor.'));
+          this.mostrarAlerta('Error al registrar: ' + (err.error || 'No se pudo conectar con el servidor.'), false);
         }
       }
     });
+  }
+
+  mostrarAlerta(mensaje: string, exito: boolean) {
+    this.alertaMensaje = mensaje;
+    this.alertaEsExito = exito;
+    this.alertaVisible = true;
+  }
+
+  cerrarAlerta() {
+    this.alertaVisible = false;
+    if (this.alertaEsExito) {
+      this.router.navigate(['/login-usuario']);
+    }
   }
 }

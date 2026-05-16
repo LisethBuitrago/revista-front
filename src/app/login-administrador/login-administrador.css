@@ -74,19 +74,32 @@
   transform: scale(1.02);
 }
 
-.register-link-container {
-  margin-top: 25px;
+.btn-continuar:disabled {
+  background-color: #999;
+  transform: none;
+  cursor: not-allowed;
 }
 
-.login-link {
-  text-decoration: none;
-  color: #333;
-  font-size: 15px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  transition: color 0.3s ease;
+/* Mensaje de error */
+.error-message {
+  background-color: #fee;
+  color: #c00;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  text-align: center;
+  border-left: 4px solid #c00;
 }
 
-.login-link:hover {
-  color: #666;
+/* Mensaje de éxito */
+.success-message {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  text-align: center;
+  border-left: 4px solid #2e7d32;
 }

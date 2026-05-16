@@ -1,4 +1,3 @@
-
 .dashboard-container {
   background-color: #f4f3ef;
   min-height: calc(100vh - 100px);
@@ -92,6 +91,7 @@
   background-color: #c00;
   color: #fff;
 }
+
 .main-content {
   flex-grow: 1;
 }
@@ -369,5 +369,28 @@
   }
   .action-section {
     padding: 30px 20px;
+  }
+
+  .error-message {
+    background-color: #fee;
+    color: #c00;
+    padding: 12px 15px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-left: 3px solid #c00;
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  .btn-enviar:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .btn-enviar:disabled:hover {
+    background-color: #1a1a1a;
   }
 }

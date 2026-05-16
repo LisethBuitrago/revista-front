@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { EncriptadorService } from '../services/encriptador-service';
-import { PublicacionService } from '../services/publicacion.service';
+import { PublicacionService} from '../services/publicacion-service';
 import { PublicacionModel } from '../models/publicacion.model';
 import { finalize } from 'rxjs';
 
@@ -34,7 +34,7 @@ export class Editor implements OnInit {
   tarjetasFiltradas: any[] = [];
 
   nuevoTitulo = '';
-  nuevoTipo = 'NOTICIA'; 
+  nuevoTipo = 'NOTICIA';
   nuevaImagen = '';
   nuevoContenido = '';
   cargando = false;
@@ -157,7 +157,7 @@ export class Editor implements OnInit {
     const nuevaPublicacion = {
       titulo: this.nuevoTitulo,
       tipo: this.nuevoTipo,
-      imagen: imagenAutomatica, 
+      imagen: imagenAutomatica,
       contenido: this.nuevoContenido,
       editorId: this.usuario.id
     };
@@ -201,7 +201,7 @@ export class Editor implements OnInit {
   cerrarAlerta() {
     this.alertaVisible = false;
     if (this.alertaEsExito) {
-      this.cambiarVista('menu'); 
+      this.cambiarVista('menu');
     }
     this.cdr.detectChanges();
   }

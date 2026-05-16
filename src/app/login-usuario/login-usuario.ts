@@ -31,9 +31,20 @@ export class LoginUsuario {
     this.successMessage = '';
 
     this.authService.loginConCorreo(this.correo, this.contrasena).subscribe({
-      next: (response) => {
+      next: (response:any) => {
         this.isLoading = false;
         console.log('Login exitoso', response);
+
+        if (response) {
+          if (response.id) {
+            localStorage.setItem('idUsuario', response.id.toString());
+          }
+          if (response.nombre) {
+            localStorage.setItem('nombre', response.nombre);
+          } else if (response.nombreUsuario) {
+            localStorage.setItem('nombre', response.nombreUsuario); // Por si en el backend se llama nombreUsuario
+          }
+        }
 
         this.successMessage = '¡Inicio de sesión exitoso! Redirigiendo...';
 

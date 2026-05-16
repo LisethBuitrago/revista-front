@@ -26,22 +26,26 @@ export class AuthService {
   }
 
   /**
-   * Valida credenciales contra el Backend.
+   * Valida credenciales contra el Backend usando el Correo.
+   * 🌟 CORRECCIÓN: La firma del Observable ahora incluye id y nombre
    * @param correo - Correo electrónico del usuario
    * @param contrasenia - Contraseña del usuario
    */
-  loginConCorreo(correo: string, contrasenia: string): Observable<{ token: string; role: string }> {
-    // El backend espera "nombre" pero nosotros enviamos el correo
+  loginConCorreo(correo: string, contrasenia: string): Observable<{ token: string; role: string; id: number; nombre: string }> {
+    // El backend espera "nombre" en el JSON, pero nosotros enviamos el correo.
+    // ¡Esto está perfecto si aplicaste el cambio en el AuthController.java!
     const credenciales = {
-      nombre: correo,      // Enviamos el correo como nombre
+      nombre: correo,
       contrasenia: contrasenia
     };
 
-    return this.http.post<{ token: string; role: string }>(`${this.urlBase}/login`, credenciales).pipe(
+    return this.http.post<{ token: string; role: string; id: number; nombre: string }>(`${this.urlBase}/login`, credenciales).pipe(
       tap(res => {
         if (res && res.token) {
           localStorage.setItem('token', res.token);
           localStorage.setItem('rol', res.role);
+          localStorage.setItem('idUsuario', res.id.toString());
+          localStorage.setItem('nombre', res.nombre);
         }
       })
     );

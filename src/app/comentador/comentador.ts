@@ -41,12 +41,9 @@ export class Comentador {
     private comentarioService: ComentarioService
   ) {}
 
-  // VALIDACIÓN DE LONGITUD DEL COMENTARIO
   validarLongitud(): void {
     if (this.comentarioTexto.length > 255) {
       this.mensajeError = '❌ El comentario no puede exceder los 255 caracteres.';
-    } else if (this.comentarioTexto.length === 0) {
-      this.mensajeError = '';
     } else {
       this.mensajeError = '';
     }
@@ -60,19 +57,16 @@ export class Comentador {
   }
 
   enviarComentario(): void {
-    // VALIDACIÓN DE LONGITUD MÁXIMA
     if (this.comentarioTexto.length > 255) {
       this.mensajeError = '❌ El comentario excede el límite de 255 caracteres.';
       return;
     }
 
-    // VALIDACIÓN DE CAMPO VACÍO
     if (!this.comentarioTexto || this.comentarioTexto.trim() === '') {
       this.mensajeError = '❌ El comentario no puede estar vacío';
       return;
     }
 
-    // VALIDACIÓN DE NOTICIA SELECCIONADA
     if (!this.noticiaSeleccionada) {
       this.mensajeError = '❌ No hay noticia seleccionada';
       return;
@@ -89,16 +83,29 @@ export class Comentador {
 
     this.comentarioService.crear(comentarioParaEnviar).subscribe({
       next: (respuesta) => {
-        console.log('Comentario enviado:', respuesta);
-        alert('¡Comentario enviado exitosamente!');
-        this.vistaActual = 'lista';
+        console.log('✅ Comentario enviado:', respuesta);
         this.enviando = false;
         this.comentarioTexto = '';
+        this.noticiaSeleccionada = null;
+        this.mensajeError = '';
+        this.vistaActual = 'lista';
+        alert('¡Comentario enviado exitosamente!');
       },
       error: (error) => {
-        console.error('Error al enviar comentario:', error);
-        this.mensajeError = 'Error al enviar el comentario. Intente nuevamente.';
-        this.enviando = false;
+        console.error('❌ Error al enviar:', error);
+        // Si el backend responde pero con error HTTP, igual puede haber guardado
+        // Forzamos el retorno a la lista de todas formas
+        if (error.status === 200 || error.status === 201) {
+          this.enviando = false;
+          this.comentarioTexto = '';
+          this.noticiaSeleccionada = null;
+          this.mensajeError = '';
+          this.vistaActual = 'lista';
+          alert('¡Comentario enviado exitosamente!');
+        } else {
+          this.mensajeError = `❌ Error ${error.status}: Intente nuevamente.`;
+          this.enviando = false;
+        }
       }
     });
   }
@@ -107,7 +114,7 @@ export class Comentador {
     const selectElement = event.target as HTMLSelectElement;
     const categoriaSeleccionada = selectElement.value.toUpperCase();
     if (categoriaSeleccionada === 'TODAS') {
-      this.tarjetasFiltradas = this.tarjetas;
+      this.tarjetasFiltradas = [...this.tarjetas];
     } else {
       this.tarjetasFiltradas = this.tarjetas.filter(
         item => item.tipo === categoriaSeleccionada

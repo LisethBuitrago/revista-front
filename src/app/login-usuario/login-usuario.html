@@ -7,6 +7,11 @@
       {{ errorMessage }}
     </div>
 
+    <!-- Mensaje de éxito -->
+    <div *ngIf="successMessage" class="success-message">
+      {{ successMessage }}
+    </div>
+
     <form (ngSubmit)="onSubmit()" class="login-form">
       <div class="form-group">
         <label for="correo">Correo</label>

@@ -97,7 +97,7 @@
   color: #666;
 }
 
-/* Estilo para mensaje de error */
+/* Mensaje de error */
 .error-message {
   background-color: #fee;
   color: #c00;
@@ -107,4 +107,16 @@
   font-size: 14px;
   text-align: center;
   border-left: 4px solid #c00;
+}
+
+/* Mensaje de éxito */
+.success-message {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  text-align: center;
+  border-left: 4px solid #2e7d32;
 }

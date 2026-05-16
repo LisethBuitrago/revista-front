@@ -17,9 +17,9 @@ export class CrearCuentaUsuario {
   contrasenia = '';
   rol = 'USUARIO';
 
-  alertaVisible: boolean = false;
-  alertaMensaje: string = '';
-  alertaEsExito: boolean = false;
+  alertaVisible = false;
+  alertaMensaje = '';
+  alertaEsExito = false;
 
   registrar() {
     if (!this.nombre || !this.correo || !this.contrasenia || !this.rol) {
@@ -43,7 +43,8 @@ export class CrearCuentaUsuario {
         if (err.status === 409) {
           this.mostrarAlerta('Error: Ese nombre ya está en uso. Intenta con otro.', false);
         } else {
-          this.mostrarAlerta('Error al registrar: ' + (err.error || 'No se pudo conectar con el servidor.'), false);
+          this.mostrarAlerta(`Error al registrar: ${err.error || 'No se pudo conectar con el servidor.'}`, false);
+
         }
       }
     });

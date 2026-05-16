@@ -2,9 +2,8 @@ import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { EncriptadorService } from '../services/encriptador-service';
 import { PublicacionService} from '../services/publicacion-service';
-import { PublicacionModel } from '../models/publicacion.model';
+import { PublicacionModel} from '../models/publicacion.model';
 import { finalize } from 'rxjs';
-import {PublicacionService} from '../services/publicacion-service';
 
 @Component({
   selector: 'app-editor',

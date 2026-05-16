@@ -1,7 +1,7 @@
-import {inject, Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {PublicacionModel} from '../models/publicacion.model';
+import { inject, Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { PublicacionModel } from '../models/publicacion.model';
 
 @Injectable({
   providedIn: 'root'

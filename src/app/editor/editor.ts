@@ -1,8 +1,9 @@
-import {Component, inject, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
-import {EncriptadorService} from '../services/encriptador-service';
-import {PublicacionService} from '../services/publicacion-service';
-import {PublicacionModel} from '../models/publicacion.model';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Router } from '@angular/router';
+import { EncriptadorService } from '../services/encriptador-service';
+import { PublicacionService } from '../services/publicacion.service';
+import { PublicacionModel } from '../models/publicacion.model';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-editor',
@@ -12,7 +13,17 @@ import {PublicacionModel} from '../models/publicacion.model';
 })
 export class Editor implements OnInit {
 
-  usuario = {nombre: 'Editor1', rol: 'Editor'};
+  private router = inject(Router);
+  private publicacionService = inject(PublicacionService);
+  private encriptadorService = inject(EncriptadorService);
+  private cdr = inject(ChangeDetectorRef);
+
+  usuario = {
+    id: 0,
+    nombre: '',
+    rol: ''
+  };
+
   vistaActual: 'menu' | 'crear' | 'comentar_lista' | 'comentar_detalle' = 'menu';
   noticiaSeleccionada: any = null;
 
@@ -22,15 +33,29 @@ export class Editor implements OnInit {
   tarjetas: any[] = [];
   tarjetasFiltradas: any[] = [];
 
+  nuevoTitulo = '';
+  nuevoTipo = 'NOTICIA'; 
+  nuevaImagen = '';
+  nuevoContenido = '';
+  cargando = false;
+
+  alertaVisible = false;
+  alertaMensaje = '';
+  alertaEsExito = false;
+
   public todoDesencriptado: boolean = false;
 
-  private encriptadorService = inject(EncriptadorService);
-  private publicacionService = inject(PublicacionService);
-
-  constructor(private router: Router) {
-  }
+  constructor() {}
 
   ngOnInit(): void {
+    const idGuardado = localStorage.getItem('idUsuario');
+    const nombreGuardado = localStorage.getItem('nombre');
+    const rolGuardado = localStorage.getItem('rol');
+
+    this.usuario.id = idGuardado ? parseInt(idGuardado, 10) : 0;
+    this.usuario.nombre = nombreGuardado || 'Editor Anónimo';
+    this.usuario.rol = rolGuardado || 'EDITOR';
+
     this.cargarPublicacionesDelSistema();
 
     this.encriptadorService.cambiarCifrado$.subscribe(() => {
@@ -55,8 +80,9 @@ export class Editor implements OnInit {
           return nuevaCard;
         });
 
-        this.tarjetasFiltradas = this.tarjetas;
+        this.tarjetasFiltradas = [...this.tarjetas];
         this.todoDesencriptado = false;
+        this.cdr.detectChanges();
       },
       error: (err) => console.error('Error conectando a tu base de datos de Spring Boot:', err)
     });
@@ -88,10 +114,7 @@ export class Editor implements OnInit {
     }
 
     this.todoDesencriptado = !this.todoDesencriptado;
-  }
-
-  cerrarSesion() {
-    this.router.navigate(['/login-usuario']);
+    this.cdr.detectChanges();
   }
 
   cambiarVista(vista: 'menu' | 'crear' | 'comentar_lista' | 'comentar_detalle') {
@@ -99,23 +122,92 @@ export class Editor implements OnInit {
     if (vista === 'comentar_lista') {
       this.cargarPublicacionesDelSistema();
     }
+    this.cdr.detectChanges();
   }
 
   abrirComentario(noticia: any): void {
     this.noticiaSeleccionada = noticia;
-    this.vistaActual = 'comentar_detalle';
+    this.cambiarVista('comentar_detalle');
   }
 
-  filtrarPorCategoria(event: Event): void {
+  filtrarPorCategoria(event: Event) {
     const selectElement = event.target as HTMLSelectElement;
-    const categoriaSeleccionada = selectElement.value.toUpperCase();
+    const categoria = selectElement.value.toUpperCase();
 
-    if (categoriaSeleccionada === 'TODAS') {
-      this.tarjetasFiltradas = this.tarjetas;
+    if (categoria === 'TODAS') {
+      this.tarjetasFiltradas = [...this.tarjetas];
     } else {
       this.tarjetasFiltradas = this.tarjetas.filter(
-        item => item.tipo.toUpperCase() === categoriaSeleccionada
+        item => item.tipo.toUpperCase() === categoria
       );
     }
+    this.cdr.detectChanges();
+  }
+
+  crearPublicacion() {
+    if (!this.nuevoTitulo || !this.nuevoContenido) {
+      this.mostrarAlerta('¡Por favor llena todos los campos obligatorios (Título y Contenido)!', false);
+      return;
+    }
+
+    this.cargando = true;
+
+    const imagenAutomatica = this.nuevoTipo === 'HORÓSCOPO' ? this.img2 : this.img1;
+
+    const nuevaPublicacion = {
+      titulo: this.nuevoTitulo,
+      tipo: this.nuevoTipo,
+      imagen: imagenAutomatica, 
+      contenido: this.nuevoContenido,
+      editorId: this.usuario.id
+    };
+
+    console.log('-> Intentando crear publicación automática:', nuevaPublicacion);
+
+    this.publicacionService.crear(nuevaPublicacion)
+      .pipe(
+        finalize(() => {
+          this.cargando = false;
+          this.cdr.detectChanges();
+        })
+      )
+      .subscribe({
+        next: (respuestaTexto) => {
+          console.log('-> Publicación creada con éxito:', respuestaTexto);
+          this.mostrarAlerta('¡Publicación creada exitosamente en Prisma Magazine!', true);
+          this.limpiarFormulario();
+        },
+        error: (err) => {
+          console.error('-> Error al crear publicación:', err);
+          this.mostrarAlerta(`Error: ${err.error || 'No se pudo guardar la publicación.'}`, false);
+        }
+      });
+  }
+
+  limpiarFormulario() {
+    this.nuevoTitulo = '';
+    this.nuevoTipo = 'NOTICIA';
+    this.nuevaImagen = '';
+    this.nuevoContenido = '';
+  }
+
+  mostrarAlerta(mensaje: string, exito: boolean) {
+    this.alertaMensaje = mensaje;
+    this.alertaEsExito = exito;
+    this.alertaVisible = true;
+    this.cdr.detectChanges();
+  }
+
+  cerrarAlerta() {
+    this.alertaVisible = false;
+    if (this.alertaEsExito) {
+      this.cambiarVista('menu'); 
+    }
+    this.cdr.detectChanges();
+  }
+
+  cerrarSesion() {
+    localStorage.clear();
+    this.router.navigate(['/login-usuario']);
   }
 }

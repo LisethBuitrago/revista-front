@@ -50,16 +50,30 @@
         </button>
 
         <h2>Crear Nueva Publicación</h2>
-        <form class="editor-form">
-          <input type="text" placeholder="Título de la noticia" required>
-          <select required>
-            <option value="" disabled selected>Selecciona una categoría...</option>
-            <option value="noticias">Noticia</option>
-            <option value="horoscopo">Horóscopo</option>
-          </select>
-          <textarea placeholder="Escribe el contenido del artículo aquí..." required></textarea>
 
-          <button type="submit" class="btn-module">Publicar Artículo</button>
+        <form class="editor-form" (ngSubmit)="crearPublicacion()">
+
+          <input
+            type="text"
+            name="titulo"
+            [(ngModel)]="nuevoTitulo"
+            placeholder="Título de la noticia"
+            required>
+
+          <select name="tipo" [(ngModel)]="nuevoTipo" required>
+            <option value="NOTICIA">Noticia</option>
+            <option value="HORÓSCOPO">Horóscopo</option>
+          </select>
+
+          <textarea
+            name="contenido"
+            [(ngModel)]="nuevoContenido"
+            placeholder="Escribe el contenido del artículo aquí..."
+            required></textarea>
+
+          <button type="submit" class="btn-module" [disabled]="cargando">
+            {{ cargando ? 'Publicando...' : 'Publicar Artículo' }}
+          </button>
         </form>
       </div>
 
@@ -116,5 +130,14 @@
         </div>
       </div>
 
-    </div> </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="alertaVisible">
+  <div class="modal-card">
+    <h3>{{ alertaEsExito ? '¡Éxito!' : 'Aviso' }}</h3>
+    <p>{{ alertaMensaje }}</p>
+    <button class="btn-module" (click)="cerrarAlerta()">Continuar</button>
+  </div>
 </div>

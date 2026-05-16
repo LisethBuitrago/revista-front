@@ -74,6 +74,12 @@
   transform: scale(1.02);
 }
 
+.btn-continuar:disabled {
+  background-color: #999;
+  transform: none;
+  cursor: not-allowed;
+}
+
 .register-link-container {
   margin-top: 25px;
 }
@@ -89,4 +95,16 @@
 
 .login-link:hover {
   color: #666;
+}
+
+/* Estilo para mensaje de error */
+.error-message {
+  background-color: #fee;
+  color: #c00;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  text-align: center;
+  border-left: 4px solid #c00;
 }

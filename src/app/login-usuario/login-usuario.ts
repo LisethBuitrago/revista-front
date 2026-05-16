@@ -1,9 +1,62 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService} from '../services/auth-service';
 
 @Component({
   selector: 'app-login-usuario',
   standalone: false,
   templateUrl: './login-usuario.html',
-  styleUrl: './login-usuario.css',
+  styleUrls: ['./login-usuario.css']
 })
-export class LoginUsuario {}
+export class LoginUsuario {
+  correo: string = '';
+  contrasena: string = '';
+  errorMessage: string = '';
+  isLoading: boolean = false;
+
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
+
+  onSubmit() {
+    if (!this.correo || !this.contrasena) {
+      this.errorMessage = 'Por favor ingresa correo y contraseña';
+      return;
+    }
+
+    this.isLoading = true;
+    this.errorMessage = '';
+
+    this.authService.loginConCorreo(this.correo, this.contrasena).subscribe({
+      next: (response) => {
+        this.isLoading = false;
+        console.log('Login exitoso', response);
+
+        const rol = this.authService.getRol();
+        if (rol === 'ADMIN') {
+          this.router.navigate(['/admin/dashboard']);
+        } else if (rol === 'USUARIO') {
+          this.router.navigate(['/user/dashboard']);
+        } else {
+          this.router.navigate(['/dashboard']);
+        }
+      },
+      error: (error) => {
+        this.isLoading = false;
+        console.log('Error recibido:', error);
+
+        // Mostrar el mensaje que envía el backend
+        if (typeof error.error === 'string') {
+          this.errorMessage = error.error;  // Mensaje del backend
+        } else if (error.status === 401) {
+          this.errorMessage = 'Correo o contraseña incorrectos';
+        } else if (error.status === 0) {
+          this.errorMessage = 'No se puede conectar al servidor';
+        } else {
+          this.errorMessage = 'Error al iniciar sesión';
+        }
+      }
+    });
+  }
+}

@@ -26,6 +26,28 @@ export class AuthService {
   }
 
   /**
+   * Valida credenciales contra el Backend.
+   * @param correo - Correo electrónico del usuario
+   * @param contrasenia - Contraseña del usuario
+   */
+  loginConCorreo(correo: string, contrasenia: string): Observable<{ token: string; role: string }> {
+    // El backend espera "nombre" pero nosotros enviamos el correo
+    const credenciales = {
+      nombre: correo,      // Enviamos el correo como nombre
+      contrasenia: contrasenia
+    };
+
+    return this.http.post<{ token: string; role: string }>(`${this.urlBase}/login`, credenciales).pipe(
+      tap(res => {
+        if (res && res.token) {
+          localStorage.setItem('token', res.token);
+          localStorage.setItem('rol', res.role);
+        }
+      })
+    );
+  }
+
+  /**
    * Registra un nuevo usuario omitiendo campos opcionales o autogenerados.
    * Espera texto plano desde el controlador.
    */

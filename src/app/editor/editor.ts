@@ -1,9 +1,9 @@
 import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { EncriptadorService } from '../services/encriptador-service';
-import { PublicacionService } from '../services/publicacion.service';
 import { PublicacionModel } from '../models/publicacion.model';
 import { finalize } from 'rxjs';
+import {PublicacionService} from '../services/publicacion-service';
 
 @Component({
   selector: 'app-editor',
@@ -34,7 +34,7 @@ export class Editor implements OnInit {
   tarjetasFiltradas: any[] = [];
 
   nuevoTitulo = '';
-  nuevoTipo = 'NOTICIA'; 
+  nuevoTipo = 'NOTICIA';
   nuevaImagen = '';
   nuevoContenido = '';
   cargando = false;
@@ -67,7 +67,7 @@ export class Editor implements OnInit {
     this.publicacionService.listarTodas().subscribe({
       next: (datos: PublicacionModel[]) => {
         this.tarjetas = datos.map(item => {
-          const esHoroscopo = item.tipo.toUpperCase() === 'HORÓSCOPO';
+          const esHoroscopo = item.tipo.toUpperCase() === 'HOROSCOPO';
 
           const nuevaCard = {
             ...item,
@@ -152,12 +152,12 @@ export class Editor implements OnInit {
 
     this.cargando = true;
 
-    const imagenAutomatica = this.nuevoTipo === 'HORÓSCOPO' ? this.img2 : this.img1;
+    const imagenAutomatica = this.nuevoTipo === 'HOROSCOPO' ? this.img2 : this.img1;
 
     const nuevaPublicacion = {
       titulo: this.nuevoTitulo,
       tipo: this.nuevoTipo,
-      imagen: imagenAutomatica, 
+      imagen: imagenAutomatica,
       contenido: this.nuevoContenido,
       editorId: this.usuario.id
     };
@@ -201,7 +201,7 @@ export class Editor implements OnInit {
   cerrarAlerta() {
     this.alertaVisible = false;
     if (this.alertaEsExito) {
-      this.cambiarVista('menu'); 
+      this.cambiarVista('menu');
     }
     this.cdr.detectChanges();
   }

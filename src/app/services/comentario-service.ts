@@ -10,9 +10,6 @@ export class ComentarioService {
   private http = inject(HttpClient);
   private readonly urlBase = 'http://localhost:8080/revista/comentarios';
 
-  /**
-   * Publica una nueva opinión ignorando la fecha y el ID autoincremental de la base de datos.
-   */
   crear(comentario: Omit<ComentarioModel, 'id' | 'fechaComentario'>): Observable<string> {
     return this.http.post(`${this.urlBase}/crear`, comentario, {responseType: 'text'});
   }

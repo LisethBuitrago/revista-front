@@ -42,7 +42,7 @@ export class LoginUsuario {
           if (response.nombre) {
             localStorage.setItem('nombre', response.nombre);
           } else if (response.nombreUsuario) {
-            localStorage.setItem('nombre', response.nombreUsuario); // Por si en el backend se llama nombreUsuario
+            localStorage.setItem('nombre', response.nombreUsuario);
           }
         }
 

@@ -52,7 +52,6 @@
         <h2>Crear Nueva Publicación</h2>
 
         <form class="editor-form" (ngSubmit)="crearPublicacion()">
-
           <input
             type="text"
             name="titulo"
@@ -125,8 +124,29 @@
 
         <div class="comment-box">
           <h3>Añade tu comentario oficial</h3>
-          <textarea placeholder="Escribe tu comentario o respuesta como Editor de Prisma Magazine..."></textarea>
-          <button class="btn-enviar">Publicar Comentario</button>
+
+          <div class="char-counter" [class.char-exceed]="comentarioTexto.length > 255">
+            <i class="fa-regular fa-keyboard"></i>
+            {{ comentarioTexto.length }}/255 caracteres
+            <span *ngIf="comentarioTexto.length > 255" class="exceed-warning">⚠️ Límite excedido</span>
+          </div>
+
+          <div *ngIf="mensajeError" class="error-message">
+            <i class="fa-solid fa-circle-exclamation"></i> {{ mensajeError }}
+          </div>
+
+          <textarea
+            [(ngModel)]="comentarioTexto"
+            placeholder="Escribe tu comentario o respuesta como Editor de Prisma Magazine... (máximo 255 caracteres)"
+            maxlength="255"
+            (input)="validarLongitudComentario()"
+            [disabled]="enviandoComentario"></textarea>
+
+          <button class="btn-enviar"
+                  (click)="enviarComentario()"
+                  [disabled]="enviandoComentario || comentarioTexto.length > 255 || comentarioTexto.trim().length === 0">
+            {{ enviandoComentario ? 'Enviando...' : 'Publicar Comentario' }}
+          </button>
         </div>
       </div>
 
@@ -134,6 +154,13 @@
   </div>
 </div>
 
+<!-- TOAST DE ÉXITO -->
+<div class="toast-success" [class.visible]="toastVisible">
+  <i class="fa-solid fa-circle-check"></i>
+  <span>¡Comentario enviado exitosamente!</span>
+</div>
+
+<!-- MODAL PARA PUBLICACIÓN -->
 <div class="modal-overlay" *ngIf="alertaVisible">
   <div class="modal-card">
     <h3>{{ alertaEsExito ? '¡Éxito!' : 'Aviso' }}</h3>

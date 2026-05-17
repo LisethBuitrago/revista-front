@@ -59,8 +59,7 @@ export class Comentador implements OnInit {
             ...item,
             imagen: esHoroscopo ? this.img2 : this.img1
           };
-
-          // 🔒 Requerimiento: Todo nace en estado encriptado en Base64
+          
           this.encriptadorService.encriptar(item.titulo).subscribe((res: any) => nuevaCard.titulo = res);
           this.encriptadorService.encriptar(item.contenido).subscribe((res: any) => nuevaCard.contenido = res);
 

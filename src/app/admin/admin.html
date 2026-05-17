@@ -1,0 +1,245 @@
+<div class="dashboard-container">
+  <div class="dashboard-content">
+
+    <div class="profile-sidebar">
+      <div class="profile-card">
+        <div class="avatar-circle">
+          <i class="fa-solid fa-user-shield"></i>
+        </div>
+        <span class="welcome-text">Bienvenido,</span>
+        <h2 class="user-name">{{ usuario.nombre }}</h2>
+        <span class="role-badge">{{ usuario.rol }}</span>
+
+        <button class="btn-logout" (click)="cerrarSesion()">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar Sesión
+        </button>
+      </div>
+    </div>
+
+    <div class="main-content">
+
+      <div class="modules-grid" *ngIf="vistaActual === 'menu'">
+        <div class="module-card">
+          <div class="module-icon">
+            <i class="fa-solid fa-users-gear"></i>
+          </div>
+          <h3>Gestión de Usuarios</h3>
+          <p>Crea, actualiza y elimina cuentas de usuarios, editores y comentadores de la plataforma.</p>
+          <button class="btn-module" (click)="cambiarVista('usuarios')">Entrar al Módulo <i
+            class="fa-solid fa-arrow-right"></i></button>
+        </div>
+
+        <div class="module-card">
+          <div class="module-icon">
+            <i class="fa-regular fa-newspaper"></i>
+          </div>
+          <h3>Gestión de Contenido</h3>
+          <p>Modera la revista. Edita o elimina publicaciones que incumplan las normas.</p>
+          <button class="btn-module" (click)="cambiarVista('publicaciones')">Entrar al Módulo <i
+            class="fa-solid fa-arrow-right"></i></button>
+        </div>
+      </div>
+
+      <div class="action-section" *ngIf="vistaActual === 'usuarios'">
+        <button class="btn-volver" (click)="cambiarVista('menu')">
+          <i class="fa-solid fa-arrow-left"></i> Volver al panel
+        </button>
+
+        <div class="section-header">
+          <h2>Gestión de Usuarios</h2>
+          <button class="btn-primary" (click)="cambiarVista('crear-usuario')">
+            <i class="fa-solid fa-plus"></i> Crear Usuario
+          </button>
+        </div>
+
+        <div class="div-table-container">
+          <div class="div-table">
+
+            <div class="div-table-header">
+              <div class="div-col">Nombre</div>
+              <div class="div-col">Correo</div>
+              <div class="div-col">Rol</div>
+              <div class="div-col text-center">Acciones</div>
+            </div>
+
+            <div class="div-table-row" *ngFor="let user of listaUsuarios">
+              <div class="div-col">{{ user.nombre }}</div>
+              <div class="div-col">{{ user.correo }}</div>
+              <div class="div-col">
+                <span class="badge-rol"
+                      [ngClass]="(user.rol || 'usuario').toLowerCase()">{{ user.rol || 'SIN ROL' }}</span>
+              </div>
+              <div class="div-col actions-col">
+                <button class="btn-icon edit" (click)="abrirEditarUsuario(user)" title="Editar">
+                  <i class="fa-solid fa-pen"></i>
+                </button>
+                <button class="btn-icon delete" title="Eliminar" (click)="eliminarUsuario(user.id)">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="action-section" *ngIf="vistaActual === 'crear-usuario'">
+        <button class="btn-volver" (click)="cambiarVista('usuarios')">
+          <i class="fa-solid fa-arrow-left"></i> Volver a la tabla
+        </button>
+        <h2>Crear Nuevo Usuario</h2>
+
+        <form class="editor-form" (ngSubmit)="registrarUsuario()">
+          <label class="form-label">Nombre Completo</label>
+          <input type="text" placeholder="Ej. Juan Pérez" [(ngModel)]="nuevoUsuario.nombre" name="nuevoNombre" required>
+
+          <label class="form-label">Correo Electrónico</label>
+          <input type="email" placeholder="Ej. juan@correo.com" [(ngModel)]="nuevoUsuario.correo" name="nuevoCorreo"
+                 required>
+
+          <label class="form-label">Asignar Rol de Usuario</label>
+          <select [(ngModel)]="nuevoUsuario.rol" name="nuevoRol" required>
+            <option value="" disabled selected>Seleccione un rol...</option>
+            <option value="USUARIO">Usuario Normal</option>
+            <option value="EDITOR">Editor</option>
+            <option value="COMENTADOR">Comentador</option>
+            <option value="ADMINISTRADOR">Administrador</option>
+          </select>
+
+          <label class="form-label">Contraseña Temporal</label>
+          <input type="password" placeholder="Mínimo 6 caracteres" [(ngModel)]="nuevoUsuario.contrasenia"
+                 name="nuevaContrasenia" required>
+
+          <button type="submit" class="btn-module">Registrar Usuario</button>
+        </form>
+      </div>
+
+      <div class="action-section" *ngIf="vistaActual === 'editar-usuario'">
+        <button class="btn-volver" (click)="cambiarVista('usuarios')">
+          <i class="fa-solid fa-arrow-left"></i> Cancelar edición
+        </button>
+
+        <ng-container *ngIf="usuarioSeleccionado">
+          <h2>Editar Usuario: {{ usuarioSeleccionado.nombre }}</h2>
+
+          <form class="editor-form" (ngSubmit)="guardarCambios()">
+            <label class="form-label">Nombre</label>
+            <input type="text" [(ngModel)]="usuarioSeleccionado.nombre" name="nombre" required>
+
+            <label class="form-label">Correo</label>
+            <input type="email" [(ngModel)]="usuarioSeleccionado.correo" name="correo" required>
+
+            <label class="form-label">Rol</label>
+            <select [(ngModel)]="usuarioSeleccionado.rol" name="rol" required>
+              <option value="USUARIO">Usuario Normal</option>
+              <option value="EDITOR">Editor</option>
+              <option value="COMENTADOR">Comentador</option>
+              <option value="ADMINISTRADOR">Administrador</option>
+            </select>
+
+            <button type="submit" class="btn-module">Guardar Cambios</button>
+          </form>
+        </ng-container>
+      </div>
+
+      <div class="action-section" *ngIf="vistaActual === 'publicaciones'">
+        <button class="btn-volver" (click)="cambiarVista('menu')">
+          <i class="fa-solid fa-arrow-left"></i> Volver al panel
+        </button>
+
+        <h2>Gestión de Publicaciones</h2>
+        <p class="section-desc">Aquí puedes ver todo el contenido, editarlo o eliminar lo que sea necesario.</p>
+
+        <div class="admin-list">
+          <div class="admin-list-item" *ngFor="let pub of listaPublicaciones">
+
+            <div class="item-info">
+              <span class="card-tag">{{ pub.tipo }}</span>
+              <h4>{{ pub.titulo }}</h4>
+              <p class="item-meta">ID de Publicación: {{ pub.id }}</p>
+
+              <div class="comentarios-mini-lista" *ngIf="pub.mostrarComentarios"
+                   style="margin-top: 15px; padding: 10px; background: #f8f9fa; border-radius: 8px; border-left: 3px solid #6366f1;">
+                <h5
+                  style="margin: 0 0 10px 0; color: #333; font-size: 0.9em; border-bottom: 1px solid #ddd; padding-bottom: 5px;">
+                  Comentarios de la publicación</h5>
+
+                <ul style="list-style: none; padding: 0; margin: 0;">
+                  <li *ngFor="let com of pub.comentarios"
+                      style="margin-bottom: 8px; font-size: 0.85em; color: #555; display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; border-bottom: 1px dashed #eee; padding-bottom: 5px;">
+                    <span style="flex: 1;">
+                      <i class="fa-regular fa-comment" style="color: #6366f1; margin-right: 5px;"></i>
+                      <strong>Usuario {{ com.editorId || com.usuarioId }}:</strong> {{ com.texto }}
+                    </span>
+                    <button class="btn-icon delete" title="Eliminar Comentario"
+                            (click)="eliminarComentario(com.id, pub)"
+                            style="padding: 2px 6px; font-size: 0.9em; flex-shrink: 0; color: #ef4444; background: none; border: none; cursor: pointer;">
+                      <i class="fa-solid fa-trash"></i>
+                    </button>
+                  </li>
+
+                  <li *ngIf="!pub.comentarios || pub.comentarios.length === 0"
+                      style="color: #999; font-size: 0.85em; font-style: italic;">
+                    No hay comentarios registrados para esta publicación.
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="item-actions">
+              <button class="btn-outline" (click)="verComentarios(pub)" style="margin-right: 10px;">
+                <i class="fa-regular fa-comments"></i> {{ pub.mostrarComentarios ? 'Ocultar' : 'Ver' }} Comentarios
+              </button>
+              <button class="btn-icon edit" title="Editar Publicación" (click)="abrirEditarPublicacion(pub)">
+                <i class="fa-solid fa-pen"></i>
+              </button>
+              <button class="btn-icon delete-lg" title="Eliminar Publicación" (click)="eliminarPublicacion(pub.id)">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+
+          </div>
+
+          <div *ngIf="listaPublicaciones.length === 0" style="text-align: center; color: #888; margin-top: 20px;">
+            No hay publicaciones en el sistema actualmente.
+          </div>
+        </div>
+      </div>
+
+      <div class="action-section" *ngIf="vistaActual === 'editar-publicacion'">
+        <button class="btn-volver" (click)="cambiarVista('publicaciones')">
+          <i class="fa-solid fa-arrow-left"></i> Cancelar edición
+        </button>
+
+        <ng-container *ngIf="publicacionSeleccionada">
+          <h2>Editar Publicación</h2>
+
+          <form class="editor-form" (ngSubmit)="guardarCambiosPublicacion()">
+            <label class="form-label">Título</label>
+            <input type="text" [(ngModel)]="publicacionSeleccionada.titulo" name="tituloPub" required>
+
+            <label class="form-label">Tipo de Contenido</label>
+            <select [(ngModel)]="publicacionSeleccionada.tipo" name="tipoPub" required>
+              <option value="NOTICIA">Noticia</option>
+              <option value="HORÓSCOPO">Horóscopo</option>
+            </select>
+
+            <label class="form-label">Contenido Completo</label>
+            <textarea [(ngModel)]="publicacionSeleccionada.contenido" name="contenidoPub" rows="6" required></textarea>
+
+            <button type="submit" class="btn-module">Guardar Cambios de Publicación</button>
+          </form>
+        </ng-container>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="alertaVisible">
+  <div class="modal-card">
+    <h3>{{ alertaEsExito ? '¡Éxito!' : 'Aviso' }}</h3>
+    <p>{{ alertaMensaje }}</p>
+    <button class="btn-module" (click)="cerrarAlerta()">Continuar</button>
+  </div>
+</div>

@@ -1,0 +1,97 @@
+<div class="dashboard-container">
+  <div class="dashboard-content">
+
+    <aside class="profile-sidebar">
+      <div class="profile-card">
+        <div class="avatar-circle">
+          <i class="fa-solid fa-user"></i>
+        </div>
+        <span class="welcome-text">Bienvenido,</span>
+        <h2 class="user-name">{{ usuario.nombre }}</h2>
+        <span class="role-badge">{{ usuario.role }}</span>
+
+        <button class="btn-logout" (click)="cerrarSesion()">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar Sesión
+        </button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+
+      <div *ngIf="vistaActual === 'lista'">
+        <div class="filter-header">
+          <h2>Publicaciones para Filtrar</h2>
+          <div class="filter-box">
+            <i class="fa-solid fa-filter"></i>
+            <select (change)="filtrarPorCategoria($event)">
+              <option value="TODAS" selected>Todas las categorías</option>
+              <option value="NOTICIA">Noticias</option>
+              <option value="HOROSCOPO">Horóscopo</option> </select>
+          </div>
+        </div>
+
+        <div class="cards-grid">
+          <div class="card" *ngFor="let item of tarjetasFiltradas">
+            <div class="card-image">
+              <img [src]="item.imagen" [alt]="item.titulo">
+            </div>
+            <div class="card-content">
+              <span class="card-tag">{{ item.tipo }}</span>
+              <h3 class="card-title">{{ item.titulo }}</h3>
+              <p class="card-description">Haz clic abajo para leer y dejar tu opinión sobre esta nota.</p>
+              <button class="btn-comentar" (click)="abrirComentario(item)">
+                <i class="fa-regular fa-comment"></i> Comentar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="action-section" *ngIf="vistaActual === 'comentar'">
+        <button class="btn-volver" (click)="vistaActual = 'lista'">
+          <i class="fa-solid fa-arrow-left"></i> Volver a la lista
+        </button>
+
+        <div class="noticia-detalle">
+          <span class="card-tag">{{ noticiaSeleccionada?.tipo }}</span>
+          <h2>{{ noticiaSeleccionada?.titulo }}</h2>
+          <img [src]="noticiaSeleccionada?.imagen" class="img-preview">
+          <p class="texto-noticia">{{ noticiaSeleccionada?.contenido || 'Sin contenido disponible.' }}</p>
+        </div>
+
+        <div class="comment-box">
+          <h3>Deja tu comentario</h3>
+
+          <div *ngIf="mensajeError" class="error-message">
+            <i class="fa-solid fa-circle-exclamation"></i> {{ mensajeError }}
+          </div>
+
+
+          <div class="char-counter" [class.char-exceed]="comentarioTexto.length > 255">
+            <i class="fa-regular fa-keyboard"></i>
+            {{ comentarioTexto.length }}/255 caracteres
+            <span *ngIf="comentarioTexto.length > 255" class="exceed-warning">⚠️ Límite excedido</span>
+          </div>
+
+          <textarea
+            [(ngModel)]="comentarioTexto"
+            placeholder="Escribe lo que piensas sobre esta noticia... (máximo 255 caracteres)"
+            [disabled]="enviando"
+            maxlength="255"
+            (input)="validarLongitud()"
+          ></textarea>
+
+          <button
+            class="btn-enviar"
+            (click)="enviarComentario()"
+            [disabled]="enviando || comentarioTexto.length > 255 || comentarioTexto.trim().length === 0"
+          >
+            <i class="fa-regular fa-paper-plane"></i>
+            {{ enviando ? 'Enviando...' : 'Enviar Comentario' }}
+          </button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>

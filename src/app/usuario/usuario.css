@@ -1,0 +1,368 @@
+
+.dashboard-container {
+  background-color: #f4f3ef;
+  min-height: calc(100vh - 100px);
+  display: flex;
+  justify-content: flex-start;
+  padding: 50px 40px;
+  font-family: 'Niramit', sans-serif;
+}
+
+.dashboard-content {
+  display: flex;
+  gap: 50px;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0;
+  align-items: flex-start;
+}
+
+.profile-sidebar {
+  width: 280px;
+  flex-shrink: 0;
+}
+
+.profile-card {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 40px 30px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.avatar-circle {
+  width: 90px;
+  height: 90px;
+  background-color: #1a1a1a;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  margin-bottom: 20px;
+}
+
+.welcome-text {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+.user-name {
+  font-size: 22px;
+  color: #1a1a1a;
+  margin: 0 0 15px 0;
+  font-weight: 700;
+}
+
+.role-badge {
+  background-color: #1a1a1a;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 6px 15px;
+  border-radius: 4px;
+  margin-bottom: 35px;
+}
+
+.btn-logout {
+  width: 100%;
+  background-color: transparent;
+  color: #c00;
+  border: 1px solid #c00;
+  padding: 12px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.btn-logout:hover {
+  background-color: #c00;
+  color: #fff;
+}
+.main-content {
+  flex-grow: 1;
+}
+.filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  background-color: #fff;
+  padding: 20px 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+}
+
+.filter-header h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.filter-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #f4f3ef;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.filter-box i {
+  color: #555;
+}
+
+.filter-box select {
+  background: transparent;
+  border: none;
+  font-family: 'Niramit', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: #1a1a1a;
+  outline: none;
+  cursor: pointer;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.card {
+  background-color: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+}
+
+.card-image {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  background-color: #eee;
+}
+
+.card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.card-content {
+  padding: 25px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-tag {
+  color: #c00;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.card-title {
+  font-family: 'Niramit', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 10px 0;
+  color: #1a1a1a;
+  line-height: 1.3;
+}
+
+.card-description {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.6;
+  margin: 0 0 20px 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex-grow: 1;
+}
+
+.btn-leer {
+  width: 100%;
+  background-color: #1a1a1a;
+  color: #fff;
+  border: none;
+  padding: 12px;
+  border-radius: 6px;
+  font-family: 'Niramit', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-leer:hover {
+  background-color: #333;
+}
+
+@media (max-width: 1100px) {
+  .cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .dashboard-content {
+    flex-direction: column;
+    align-items: center;
+  }
+  .profile-sidebar {
+    width: 100%;
+    max-width: 400px;
+  }
+  .filter-header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+  .cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.modal-card.leer-card {
+  background: white;
+  padding: 35px 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  max-width: 650px;
+  width: 90%;
+  max-height: 85vh;
+  overflow-y: auto;
+  animation: fadeInModal 0.3s ease-in-out;
+}
+
+@keyframes fadeInModal {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.modal-card.leer-card {
+  background: white;
+  padding: 35px 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  max-width: 650px;
+  width: 90%;
+  max-height: 85vh;
+  overflow-y: auto;
+  animation: fadeInModal 0.3s ease-in-out;
+}
+.modal-tag {
+  display: block;
+  text-align: left;
+}
+
+.modal-titulo {
+  text-align: left;
+  margin-top: 10px;
+  color: #1a1a1a;
+}
+
+.modal-fecha {
+  text-align: left;
+  font-size: 13px;
+  color: gray;
+}
+
+.modal-img {
+  width: 100%;
+  max-height: 250px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin: 15px 0;
+}
+
+.modal-texto {
+  text-align: justify;
+  line-height: 1.6;
+  color: #444;
+  font-size: 16px;
+}
+
+.btn-cerrar-modal {
+  margin-top: 25px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #1a1a1a;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 12px;
+  font-family: 'Niramit', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-cerrar-modal:hover {
+  background-color: #333;
+}
+
+@keyframes fadeInModal {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

@@ -13,9 +13,9 @@ import {PublicacionModel} from '../models/publicacion.model';
 })
 export class Comentador implements OnInit {
   usuario = {
-    nombre: 'Comentador1',
-    role: 'Comentador',
-    id: 1
+    id: 0,
+    nombre: '',
+    role: ''
   };
 
   vistaActual: 'lista' | 'comentar' = 'lista';
@@ -42,6 +42,13 @@ export class Comentador implements OnInit {
   }
 
   ngOnInit(): void {
+    const idGuardado = localStorage.getItem('idUsuario');
+    const nombreGuardado = localStorage.getItem('nombre');
+    const rolGuardado = localStorage.getItem('rol');
+
+    this.usuario.id = idGuardado ? parseInt(idGuardado, 10) : 0;
+    this.usuario.nombre = nombreGuardado || 'Comentador Anónimo';
+    this.usuario.role = rolGuardado || 'COMENTADOR';
     this.cargarPublicacionesDelSistema();
 
     this.encriptadorService.cambiarCifrado$.subscribe(() => {
@@ -53,13 +60,13 @@ export class Comentador implements OnInit {
     this.publicacionService.listarTodas().subscribe({
       next: (datos: PublicacionModel[]) => {
         this.tarjetas = datos.map(item => {
-          const esHoroscopo = (item.tipo || '').toUpperCase() === 'HORÓSCOPO';
+          const esHoroscopo = (item.tipo || '').toUpperCase() === 'HOROSCOPO';
 
           const nuevaCard = {
             ...item,
             imagen: esHoroscopo ? this.img2 : this.img1
           };
-          
+
           this.encriptadorService.encriptar(item.titulo).subscribe((res: any) => nuevaCard.titulo = res);
           this.encriptadorService.encriptar(item.contenido).subscribe((res: any) => nuevaCard.contenido = res);
 
@@ -190,6 +197,7 @@ export class Comentador implements OnInit {
   }
 
   cerrarSesion(): void {
+    localStorage.clear();
     this.router.navigate(['/login-usuario']);
   }
 }

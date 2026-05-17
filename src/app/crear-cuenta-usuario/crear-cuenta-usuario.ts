@@ -1,6 +1,7 @@
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth-service';
 import { finalize } from 'rxjs';
+import {ChangeDetectorRef, Component, inject} from '@angular/core';
 
 @Component({
   selector: 'app-crear-cuenta-usuario',

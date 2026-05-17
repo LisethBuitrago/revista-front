@@ -24,8 +24,9 @@
             <i class="fa-solid fa-users-gear"></i>
           </div>
           <h3>Gestión de Usuarios</h3>
-          <p>Crea y actualiza cuentas de usuarios, editores y comentadores de la plataforma.</p>
-          <button class="btn-module" (click)="cambiarVista('usuarios')">Entrar al Módulo <i class="fa-solid fa-arrow-right"></i></button>
+          <p>Crea, actualiza y elimina cuentas de usuarios, editores y comentadores de la plataforma.</p>
+          <button class="btn-module" (click)="cambiarVista('usuarios')">Entrar al Módulo <i
+            class="fa-solid fa-arrow-right"></i></button>
         </div>
 
         <div class="module-card">
@@ -34,7 +35,8 @@
           </div>
           <h3>Gestión de Contenido</h3>
           <p>Modera la revista. Edita o elimina publicaciones que incumplan las normas.</p>
-          <button class="btn-module" (click)="cambiarVista('publicaciones')">Entrar al Módulo <i class="fa-solid fa-arrow-right"></i></button>
+          <button class="btn-module" (click)="cambiarVista('publicaciones')">Entrar al Módulo <i
+            class="fa-solid fa-arrow-right"></i></button>
         </div>
       </div>
 
@@ -64,11 +66,15 @@
               <div class="div-col">{{ user.nombre }}</div>
               <div class="div-col">{{ user.correo }}</div>
               <div class="div-col">
-                <span class="badge-rol" [ngClass]="(user.rol || 'usuario').toLowerCase()">{{ user.rol || 'SIN ROL' }}</span>
+                <span class="badge-rol"
+                      [ngClass]="(user.rol || 'usuario').toLowerCase()">{{ user.rol || 'SIN ROL' }}</span>
               </div>
               <div class="div-col actions-col">
                 <button class="btn-icon edit" (click)="abrirEditarUsuario(user)" title="Editar">
                   <i class="fa-solid fa-pen"></i>
+                </button>
+                <button class="btn-icon delete" title="Eliminar" (click)="eliminarUsuario(user.id)">
+                  <i class="fa-solid fa-trash"></i>
                 </button>
               </div>
             </div>
@@ -85,10 +91,11 @@
 
         <form class="editor-form" (ngSubmit)="registrarUsuario()">
           <label class="form-label">Nombre Completo</label>
-          <input type="text" [(ngModel)]="nuevoUsuario.nombre" name="nuevoNombre" placeholder="Ej. Juan Pérez" required>
+          <input type="text" placeholder="Ej. Juan Pérez" [(ngModel)]="nuevoUsuario.nombre" name="nuevoNombre" required>
 
           <label class="form-label">Correo Electrónico</label>
-          <input type="email" [(ngModel)]="nuevoUsuario.correo" name="nuevoCorreo" placeholder="Ej. juan@correo.com" required>
+          <input type="email" placeholder="Ej. juan@correo.com" [(ngModel)]="nuevoUsuario.correo" name="nuevoCorreo"
+                 required>
 
           <label class="form-label">Asignar Rol de Usuario</label>
           <select [(ngModel)]="nuevoUsuario.rol" name="nuevoRol" required>
@@ -100,7 +107,8 @@
           </select>
 
           <label class="form-label">Contraseña Temporal</label>
-          <input type="password" [(ngModel)]="nuevoUsuario.contrasenia" name="nuevaContrasenia" placeholder="Mínimo 6 caracteres" required>
+          <input type="password" placeholder="Mínimo 6 caracteres" [(ngModel)]="nuevoUsuario.contrasenia"
+                 name="nuevaContrasenia" required>
 
           <button type="submit" class="btn-module">Registrar Usuario</button>
         </form>
@@ -150,35 +158,38 @@
               <h4>{{ pub.titulo }}</h4>
               <p class="item-meta">ID de Publicación: {{ pub.id }}</p>
 
-              <div class="comentarios-mini-lista" *ngIf="pub.mostrarComentarios" style="margin-top: 15px; padding: 10px; background: #f8f9fa; border-radius: 8px; border-left: 3px solid #6366f1;">
-                <h5 style="margin: 0 0 10px 0; color: #333; font-size: 0.9em; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Comentarios de la publicación</h5>
+              <div class="comentarios-mini-lista" *ngIf="pub.mostrarComentarios"
+                   style="margin-top: 15px; padding: 10px; background: #f8f9fa; border-radius: 8px; border-left: 3px solid #6366f1;">
+                <h5
+                  style="margin: 0 0 10px 0; color: #333; font-size: 0.9em; border-bottom: 1px solid #ddd; padding-bottom: 5px;">
+                  Comentarios de la publicación</h5>
 
                 <ul style="list-style: none; padding: 0; margin: 0;">
-                  <li *ngFor="let com of pub.comentarios" style="margin-bottom: 8px; font-size: 0.85em; color: #555; display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; border-bottom: 1px dashed #eee; padding-bottom: 5px;">
-
+                  <li *ngFor="let com of pub.comentarios"
+                      style="margin-bottom: 8px; font-size: 0.85em; color: #555; display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; border-bottom: 1px dashed #eee; padding-bottom: 5px;">
                     <span style="flex: 1;">
                       <i class="fa-regular fa-comment" style="color: #6366f1; margin-right: 5px;"></i>
                       <strong>Usuario {{ com.editorId || com.usuarioId }}:</strong> {{ com.texto }}
                     </span>
-
-                    <button class="btn-icon delete" title="Eliminar Comentario" (click)="eliminarComentario(com.id, pub)" style="padding: 2px 6px; font-size: 0.9em; flex-shrink: 0; color: #ef4444; background: none; border: none; cursor: pointer;">
+                    <button class="btn-icon delete" title="Eliminar Comentario"
+                            (click)="eliminarComentario(com.id, pub)"
+                            style="padding: 2px 6px; font-size: 0.9em; flex-shrink: 0; color: #ef4444; background: none; border: none; cursor: pointer;">
                       <i class="fa-solid fa-trash"></i>
                     </button>
                   </li>
 
-                  <li *ngIf="!pub.comentarios || pub.comentarios.length === 0" style="color: #999; font-size: 0.85em; font-style: italic;">
+                  <li *ngIf="!pub.comentarios || pub.comentarios.length === 0"
+                      style="color: #999; font-size: 0.85em; font-style: italic;">
                     No hay comentarios registrados para esta publicación.
                   </li>
                 </ul>
               </div>
-
             </div>
 
             <div class="item-actions">
               <button class="btn-outline" (click)="verComentarios(pub)" style="margin-right: 10px;">
                 <i class="fa-regular fa-comments"></i> {{ pub.mostrarComentarios ? 'Ocultar' : 'Ver' }} Comentarios
               </button>
-
               <button class="btn-icon edit" title="Editar Publicación" (click)="abrirEditarPublicacion(pub)">
                 <i class="fa-solid fa-pen"></i>
               </button>
@@ -186,6 +197,7 @@
                 <i class="fa-solid fa-trash"></i>
               </button>
             </div>
+
           </div>
 
           <div *ngIf="listaPublicaciones.length === 0" style="text-align: center; color: #888; margin-top: 20px;">

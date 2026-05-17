@@ -1,4 +1,3 @@
-import { Component, inject, ChangeDetectorRef } from '@angular/core'; // 💡 Importamos ChangeDetectorRef
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth-service';
 import { finalize } from 'rxjs';

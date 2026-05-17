@@ -41,7 +41,7 @@ export class Editor implements OnInit {
   alertaMensaje = '';
   alertaEsExito = false;
 
-  toastVisible = false; // 👈 nuevo
+  toastVisible = false;
 
   public todoDesencriptado: boolean = false;
 
@@ -151,7 +151,7 @@ export class Editor implements OnInit {
 
   validarLongitudComentario(): void {
     if (this.comentarioTexto.length > 255) {
-      this.mensajeError = '❌ El comentario no puede exceder los 255 caracteres.';
+      this.mensajeError = 'El comentario no puede exceder los 255 caracteres.';
     } else {
       this.mensajeError = '';
     }
@@ -159,15 +159,15 @@ export class Editor implements OnInit {
 
   enviarComentario(): void {
     if (this.comentarioTexto.length > 255) {
-      this.mensajeError = '❌ El comentario excede el límite de 255 caracteres.';
+      this.mensajeError = 'El comentario excede el límite de 255 caracteres.';
       return;
     }
     if (!this.comentarioTexto || this.comentarioTexto.trim() === '') {
-      this.mensajeError = '❌ El comentario no puede estar vacío';
+      this.mensajeError = 'El comentario no puede estar vacío';
       return;
     }
     if (!this.noticiaSeleccionada) {
-      this.mensajeError = '❌ No hay publicación seleccionada';
+      this.mensajeError = 'No hay publicación seleccionada';
       return;
     }
 
@@ -185,11 +185,11 @@ export class Editor implements OnInit {
         this.enviandoComentario = false;
         this.comentarioTexto = '';
         this.cambiarVista('comentar_lista');
-        this.mostrarToast(); // 👈 toast en lugar de alert
+        this.mostrarToast();
       },
       error: (error: any) => {
         console.error('Error al enviar comentario:', error);
-        this.mensajeError = '❌ Error al enviar el comentario. Intente nuevamente.';
+        this.mensajeError = 'Error al enviar el comentario. Intente nuevamente.';
         this.enviandoComentario = false;
         this.cdr.detectChanges();
       }

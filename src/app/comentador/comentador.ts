@@ -1,13 +1,9 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
-import { Router } from '@angular/router';
-import { ComentarioService } from '../services/comentario-service';
-
-interface Tarjeta {
-  id: number;
-  titulo: string;
-  tipo: 'HORÓSCOPO' | 'NOTICIA';
-  imagen: string;
-}
+import {Component, ChangeDetectorRef, OnInit, inject} from '@angular/core';
+import {Router} from '@angular/router';
+import {ComentarioService} from '../services/comentario-service';
+import {EncriptadorService} from '../services/encriptador-service';
+import {PublicacionService} from '../services/publicacion-service';
+import {PublicacionModel} from '../models/publicacion.model';
 
 @Component({
   selector: 'app-comentador',
@@ -15,41 +11,98 @@ interface Tarjeta {
   templateUrl: './comentador.html',
   styleUrl: './comentador.css',
 })
-export class Comentador {
+export class Comentador implements OnInit {
   usuario = {
     nombre: 'Comentador1',
-    rol: 'Comentador',
+    role: 'Comentador',
     id: 1
   };
 
   vistaActual: 'lista' | 'comentar' = 'lista';
-  noticiaSeleccionada: Tarjeta | null = null;
+  noticiaSeleccionada: any = null;
   comentarioTexto: string = '';
   mensajeError: string = '';
   enviando: boolean = false;
 
-  tarjetas: Tarjeta[] = [
-    {
-      id: 1,
-      titulo: 'Las estrellas dicen...',
-      tipo: 'HORÓSCOPO',
-      imagen: 'https://depor.com/resizer/v2/5UEDBTDAIVC67FUUJR474F7ITA.jpg?auth=3756e394f1de56526b8ab7abab8356273de8fc0e4bf7ed3ec12ec6677f8726f8&width=3000&height=3000&quality=75&smart=true'
-    },
-    {
-      id: 2,
-      titulo: 'Gran estreno en cines',
-      tipo: 'NOTICIA',
-      imagen: 'https://i.ytimg.com/vi/hlGbKDBzdw4/maxresdefault.jpg'
+  img1 = "https://i.ytimg.com/vi/hlGbKDBzdw4/maxresdefault.jpg";
+  img2 = "https://depor.com/resizer/v2/5UEDBTDAIVC67FUUJR474F7ITA.jpg?auth=3756e394f1de56526b8ab7abab8356273de8fc0e4bf7ed3ec12ec6677f8726f8&width=3000&height=3000&quality=75&smart=true";
+
+  tarjetas: any[] = [];
+  tarjetasFiltradas: any[] = [];
+
+  public todoDesencriptado: boolean = false;
+
+  private router = inject(Router);
+  private comentarioService = inject(ComentarioService);
+  private encriptadorService = inject(EncriptadorService);
+  private publicacionService = inject(PublicacionService);
+  private cdr = inject(ChangeDetectorRef);
+
+  constructor() {
+  }
+
+  ngOnInit(): void {
+    this.cargarPublicacionesDelSistema();
+
+    this.encriptadorService.cambiarCifrado$.subscribe(() => {
+      this.alternarCifradoDesdeBackend();
+    });
+  }
+
+  cargarPublicacionesDelSistema(): void {
+    this.publicacionService.listarTodas().subscribe({
+      next: (datos: PublicacionModel[]) => {
+        this.tarjetas = datos.map(item => {
+          const esHoroscopo = (item.tipo || '').toUpperCase() === 'HORÓSCOPO';
+
+          const nuevaCard = {
+            ...item,
+            imagen: esHoroscopo ? this.img2 : this.img1
+          };
+
+          // 🔒 Requerimiento: Todo nace en estado encriptado en Base64
+          this.encriptadorService.encriptar(item.titulo).subscribe((res: any) => nuevaCard.titulo = res);
+          this.encriptadorService.encriptar(item.contenido).subscribe((res: any) => nuevaCard.contenido = res);
+
+          return nuevaCard;
+        });
+
+        this.tarjetasFiltradas = [...this.tarjetas];
+        this.todoDesencriptado = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.error('Error conectando a tu base de datos de Spring Boot:', err)
+    });
+  }
+
+  alternarCifradoDesdeBackend(): void {
+    if (this.tarjetas.length === 0) return;
+
+    for (let i = 0; i < this.tarjetas.length; i++) {
+      const item = this.tarjetas[i];
+      if (!this.todoDesencriptado) {
+        this.encriptadorService.desencriptar(item.titulo).subscribe((res: any) => item.titulo = res);
+        this.encriptadorService.desencriptar(item.contenido).subscribe((res: any) => item.contenido = res);
+      } else {
+        this.encriptadorService.encriptar(item.titulo).subscribe((res: any) => item.titulo = res);
+        this.encriptadorService.encriptar(item.contenido).subscribe((res: any) => item.contenido = res);
+      }
     }
-  ];
 
-  tarjetasFiltradas: Tarjeta[] = [...this.tarjetas];
+    if (this.noticiaSeleccionada) {
+      const seleccionada = this.noticiaSeleccionada;
+      if (!this.todoDesencriptado) {
+        this.encriptadorService.desencriptar(seleccionada.titulo).subscribe((res: any) => seleccionada.titulo = res);
+        this.encriptadorService.desencriptar(seleccionada.contenido).subscribe((res: any) => seleccionada.contenido = res);
+      } else {
+        this.encriptadorService.encriptar(seleccionada.titulo).subscribe((res: any) => seleccionada.titulo = res);
+        this.encriptadorService.encriptar(seleccionada.contenido).subscribe((res: any) => seleccionada.contenido = res);
+      }
+    }
 
-  constructor(
-    private router: Router,
-    private comentarioService: ComentarioService,
-    private cdr: ChangeDetectorRef
-  ) {}
+    this.todoDesencriptado = !this.todoDesencriptado;
+    this.cdr.detectChanges();
+  }
 
   validarLongitud(): void {
     if (this.comentarioTexto.length > 255) {
@@ -59,8 +112,8 @@ export class Comentador {
     }
   }
 
-  abrirComentario(noticia: Tarjeta): void {
-    this.noticiaSeleccionada = noticia;
+  abrirComentario(noticia: any): void {
+    this.noticiaSeleccionada = {...noticia};
     this.comentarioTexto = '';
     this.mensajeError = '';
     this.vistaActual = 'comentar';
@@ -118,7 +171,6 @@ export class Comentador {
         } else {
           this.mensajeError = `Error ${error.status}: Intente nuevamente.`;
           this.enviando = false;
-
           this.cdr.detectChanges();
         }
       }
@@ -133,7 +185,7 @@ export class Comentador {
       this.tarjetasFiltradas = [...this.tarjetas];
     } else {
       this.tarjetasFiltradas = this.tarjetas.filter(
-        item => item.tipo === categoriaSeleccionada
+        item => (item.tipo || '').toUpperCase() === categoriaSeleccionada
       );
     }
   }

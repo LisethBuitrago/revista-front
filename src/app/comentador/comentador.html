@@ -8,7 +8,7 @@
         </div>
         <span class="welcome-text">Bienvenido,</span>
         <h2 class="user-name">{{ usuario.nombre }}</h2>
-        <span class="role-badge">{{ usuario.rol }}</span>
+        <span class="role-badge">{{ usuario.role }}</span>
 
         <button class="btn-logout" (click)="cerrarSesion()">
           <i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar Sesión
@@ -57,7 +57,7 @@
           <span class="card-tag">{{ noticiaSeleccionada?.tipo }}</span>
           <h2>{{ noticiaSeleccionada?.titulo }}</h2>
           <img [src]="noticiaSeleccionada?.imagen" class="img-preview">
-          <p class="texto-noticia">Aquí va el contenido completo de la noticia que el comentador está leyendo para poder opinar con fundamento...</p>
+          <p class="texto-noticia">{{ noticiaSeleccionada?.contenido || 'Sin contenido disponible.' }}</p>
         </div>
 
         <div class="comment-box">

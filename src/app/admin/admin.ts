@@ -1,8 +1,9 @@
-import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
-import { Router } from '@angular/router';
-import { UsuarioService } from '../services/usuario-service';
-import { PublicacionService } from '../services/publicacion-service';
-import { ComentarioService } from '../services/comentario-service';
+import {Component, OnInit, inject, ChangeDetectorRef} from '@angular/core';
+import {Router} from '@angular/router';
+import {UsuarioService} from '../services/usuario-service';
+import {PublicacionService} from '../services/publicacion-service';
+import {ComentarioService} from '../services/comentario-service';
+import {EncriptadorService} from '../services/encriptador-service';
 
 @Component({
   selector: 'app-admin',
@@ -11,11 +12,10 @@ import { ComentarioService } from '../services/comentario-service';
   styleUrl: './admin.css',
 })
 export class Admin implements OnInit {
-  usuario = { nombre: 'Administrador', rol: 'ADMINISTRADOR' };
+  usuario = {nombre: 'Administrador', rol: 'ADMINISTRADOR'};
 
   vistaActual: 'menu' | 'usuarios' | 'publicaciones' | 'crear-usuario' | 'editar-usuario' | 'editar-publicacion' = 'menu';
 
-  // -- Control de Usuarios --
   usuarioSeleccionado: any = null;
   listaUsuarios: any[] = [];
   nuevoUsuario = {
@@ -25,19 +25,19 @@ export class Admin implements OnInit {
     contrasenia: ''
   };
 
-  // -- Control de Publicaciones --
   listaPublicaciones: any[] = [];
   publicacionSeleccionada: any = null;
-
-  // -- Alertas --
   alertaVisible = false;
   alertaMensaje = '';
   alertaEsExito = false;
+
+  public todoDesencriptado: boolean = false;
 
   private router = inject(Router);
   private usuarioService = inject(UsuarioService);
   private publicacionService = inject(PublicacionService);
   private comentarioService = inject(ComentarioService);
+  private encriptadorService = inject(EncriptadorService);
   private cdr = inject(ChangeDetectorRef);
 
   ngOnInit(): void {
@@ -46,11 +46,13 @@ export class Admin implements OnInit {
     this.usuario.nombre = nombreGuardado || 'Administrador';
     this.usuario.rol = rolGuardado || 'ADMINISTRADOR';
     this.cargarUsuarios();
+
+    // Escucha permanente al botón global de desencriptar del Navbar
+    this.encriptadorService.cambiarCifrado$.subscribe(() => {
+      this.alternarCifradoDesdeBackend();
+    });
   }
 
-  // ==========================================
-  //         MÓDULO DE USUARIOS
-  // ==========================================
   cargarUsuarios(): void {
     this.usuarioService.listarTodos().subscribe({
       next: (datos) => {
@@ -79,7 +81,7 @@ export class Admin implements OnInit {
         this.vistaActual = 'usuarios';
         this.mostrarAlerta('¡Usuario registrado exitosamente!', true);
         this.cargarUsuarios();
-        this.nuevoUsuario = { nombre: '', correo: '', rol: '', contrasenia: '' };
+        this.nuevoUsuario = {nombre: '', correo: '', rol: '', contrasenia: ''};
       },
       error: (err) => {
         console.error('Error al crear el usuario:', err);
@@ -88,8 +90,24 @@ export class Admin implements OnInit {
     });
   }
 
+  eliminarUsuario(id: number) {
+    const confirmacion = confirm('¿Estás seguro de que deseas eliminar a este usuario de la revista? Esta acción no se puede deshacer.');
+    if (confirmacion) {
+      this.usuarioService.eliminar(id).subscribe({
+        next: (respuesta) => {
+          this.mostrarAlerta(respuesta || 'Usuario eliminado exitosamente.', true);
+          this.cargarUsuarios();
+        },
+        error: (err) => {
+          console.error('Error al eliminar el usuario:', err);
+          this.mostrarAlerta('Hubo un error al intentar eliminar el usuario.', false);
+        }
+      });
+    }
+  }
+
   abrirEditarUsuario(user: any) {
-    this.usuarioSeleccionado = { ...user };
+    this.usuarioSeleccionado = {...user};
     this.vistaActual = 'editar-usuario';
   }
 
@@ -120,21 +138,55 @@ export class Admin implements OnInit {
     });
   }
 
-  // ==========================================
-  //         MÓDULO DE PUBLICACIONES
-  // ==========================================
   cargarPublicaciones(): void {
     this.publicacionService.listarTodas().subscribe({
       next: (datos) => {
-        this.listaPublicaciones = datos || [];
+        this.listaPublicaciones = (datos || []).map(item => {
+          const pub = {...item};
+
+          this.encriptadorService.encriptar(pub.titulo).subscribe((res: any) => pub.titulo = res);
+          this.encriptadorService.encriptar(pub.contenido).subscribe((res: any) => pub.contenido = res);
+
+          return pub;
+        });
+        this.todoDesencriptado = false;
         this.cdr.detectChanges();
       },
       error: (err) => console.error('Error al cargar publicaciones:', err)
     });
   }
 
+  alternarCifradoDesdeBackend(): void {
+    if (this.listaPublicaciones.length === 0) return;
+
+    for (let i = 0; i < this.listaPublicaciones.length; i++) {
+      const pub = this.listaPublicaciones[i];
+      if (!this.todoDesencriptado) {
+        this.encriptadorService.desencriptar(pub.titulo).subscribe((res: any) => pub.titulo = res);
+        this.encriptadorService.desencriptar(pub.contenido).subscribe((res: any) => pub.contenido = res);
+      } else {
+        this.encriptadorService.encriptar(pub.titulo).subscribe((res: any) => pub.titulo = res);
+        this.encriptadorService.encriptar(pub.contenido).subscribe((res: any) => pub.contenido = res);
+      }
+    }
+
+    if (this.publicacionSeleccionada) {
+      const seleccionada = this.publicacionSeleccionada;
+      if (!this.todoDesencriptado) {
+        this.encriptadorService.desencriptar(seleccionada.titulo).subscribe((res: any) => seleccionada.titulo = res);
+        this.encriptadorService.desencriptar(seleccionada.contenido).subscribe((res: any) => seleccionada.contenido = res);
+      } else {
+        this.encriptadorService.encriptar(seleccionada.titulo).subscribe((res: any) => seleccionada.titulo = res);
+        this.encriptadorService.encriptar(seleccionada.contenido).subscribe((res: any) => seleccionada.contenido = res);
+      }
+    }
+
+    this.todoDesencriptado = !this.todoDesencriptado;
+    this.cdr.detectChanges();
+  }
+
   abrirEditarPublicacion(pub: any) {
-    this.publicacionSeleccionada = { ...pub };
+    this.publicacionSeleccionada = {...pub};
     this.vistaActual = 'editar-publicacion';
   }
 
@@ -174,9 +226,6 @@ export class Admin implements OnInit {
     }
   }
 
-  // ==========================================
-  //         MÓDULO DE COMENTARIOS
-  // ==========================================
   verComentarios(pub: any) {
     if (pub.mostrarComentarios) {
       pub.mostrarComentarios = false;
@@ -220,9 +269,6 @@ export class Admin implements OnInit {
     }
   }
 
-  // ==========================================
-  //         MÉTODOS GENERALES (UI)
-  // ==========================================
   cambiarVista(vista: any) {
     this.vistaActual = vista;
     if (vista === 'usuarios') {

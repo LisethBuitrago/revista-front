@@ -14,6 +14,13 @@ export class Navbar {
 
   onDesencriptar(event: Event): void {
     event.preventDefault();
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('¡Acceso denegado! Debes iniciar sesión en la revista para poder Desencriptar las publicaciones.');
+      return;
+    }
+
     this.encriptadorService.cambiarCifrado$.next();
   }
 }

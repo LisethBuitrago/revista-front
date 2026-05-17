@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService} from '../services/auth-service';
 
@@ -17,21 +17,24 @@ export class LoginUsuario {
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   onSubmit() {
     if (!this.correo || !this.contrasena) {
       this.errorMessage = 'Por favor ingresa correo y contraseña';
+      this.cdr.detectChanges();
       return;
     }
 
     this.isLoading = true;
     this.errorMessage = '';
     this.successMessage = '';
+    this.cdr.detectChanges();
 
     this.authService.loginConCorreo(this.correo, this.contrasena).subscribe({
-      next: (response:any) => {
+      next: (response: any) => {
         this.isLoading = false;
         console.log('Login exitoso', response);
 
@@ -47,6 +50,7 @@ export class LoginUsuario {
         }
 
         this.successMessage = '¡Inicio de sesión exitoso! Redirigiendo...';
+        this.cdr.detectChanges();
 
         const rol = this.authService.getRol();
 
@@ -56,17 +60,18 @@ export class LoginUsuario {
       },
       error: (error) => {
         this.isLoading = false;
+        this.successMessage = '';
         console.error('Error:', error);
 
-        if (typeof error.error === 'string') {
-          this.errorMessage = error.error;
-        } else if (error.status === 401) {
-          this.errorMessage = 'Correo o contraseña incorrectos';
+        if (error.status === 401 || error.status === 403) {
+          this.errorMessage = 'No se pudo iniciar sesión. Correo o contraseña incorrectos, por favor intenta nuevamente.';
         } else if (error.status === 0) {
-          this.errorMessage = 'No se puede conectar al servidor';
+          this.errorMessage = 'No se pudo iniciar sesión. No hay conexión con el servidor, por favor intenta nuevamente.';
         } else {
-          this.errorMessage = 'Error al iniciar sesión';
+          this.errorMessage = 'No se pudo iniciar sesión. Por favor intenta nuevamente.';
         }
+
+        this.cdr.detectChanges();
       }
     });
   }

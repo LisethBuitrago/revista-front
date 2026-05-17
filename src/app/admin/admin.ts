@@ -47,7 +47,6 @@ export class Admin implements OnInit {
     this.usuario.rol = rolGuardado || 'ADMINISTRADOR';
     this.cargarUsuarios();
 
-    // Escucha permanente al botón global de desencriptar del Navbar
     this.encriptadorService.cambiarCifrado$.subscribe(() => {
       this.alternarCifradoDesdeBackend();
     });

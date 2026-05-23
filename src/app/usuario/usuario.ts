@@ -3,6 +3,7 @@ import {Router} from '@angular/router';
 import {PublicacionService} from '../services/publicacion-service';
 import {EncriptadorService} from '../services/encriptador-service';
 import {PublicacionModel} from '../models/publicacion.model';
+import {forkJoin} from 'rxjs';
 
 @Component({
   selector: 'app-usuario',
@@ -44,18 +45,34 @@ export class Usuario implements OnInit {
   cargarPublicaciones(): void {
     this.publicacionService.listarTodas().subscribe({
       next: (datos: PublicacionModel[]) => {
-        this.tarjetas = datos.map(item => {
-          const nuevaCard = {
-            ...item,
-            imagen: item.tipo.toUpperCase() === 'HOROSCOPO' ? this.img2 : this.img1
-          };
-          this.encriptadorService.encriptar(item.titulo).subscribe((res: any) => nuevaCard.titulo = res);
-          this.encriptadorService.encriptar(item.contenido).subscribe((res: any) => nuevaCard.contenido = res);
-          return nuevaCard;
-        });
+        // Construir las tarjetas base sin encriptar aún
+        const tarjetasBase = datos.map(item => ({
+          ...item,
+          imagen: item.tipo.toUpperCase() === 'HOROSCOPO' ? this.img2 : this.img1
+        }));
 
-        this.tarjetasFiltradas = [...this.tarjetas];
-        this.todoDesencriptado = false;
+        // Esperar a que TODAS las encriptaciones terminen antes de asignar
+        const encriptaciones = tarjetasBase.map(card =>
+          forkJoin({
+            titulo: this.encriptadorService.encriptar(card.titulo),
+            contenido: this.encriptadorService.encriptar(card.contenido)
+          })
+        );
+
+        forkJoin(encriptaciones).subscribe({
+          next: (resultados) => {
+            resultados.forEach((res: any, i: number) => {
+              tarjetasBase[i].titulo = res.titulo;
+              tarjetasBase[i].contenido = res.contenido;
+            });
+
+            this.tarjetas = tarjetasBase;
+            // Ahora sí se asigna con todos los datos listos
+            this.tarjetasFiltradas = [...this.tarjetas];
+            this.todoDesencriptado = false;
+          },
+          error: (err) => console.error('Error al encriptar publicaciones:', err)
+        });
       },
       error: (err) => console.error('Error al cargar publicaciones:', err)
     });
